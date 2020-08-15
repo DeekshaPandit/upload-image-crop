@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import "./App.css"
+import "./DropeZone"
+import "./DropeZone.css"
+import DropZone from "./DropeZone";
 
 class Form extends Component {
   constructor() {
@@ -25,7 +29,9 @@ class Form extends Component {
      
     }
   };
+
  
+
 
   render() {
     return (
@@ -33,6 +39,16 @@ class Form extends Component {
         <div>
           <input type="file" accept="image/*" onChange={this.onSelectFile} multiple/>
         </div>
+        
+        <div>
+            <p className ="titel">React drag and drop image uploader</p>
+            <div className ="content">
+              <DropZone />
+
+            </div>
+        </div>
+
+
       </form>
     );
   }
