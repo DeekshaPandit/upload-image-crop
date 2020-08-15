@@ -1,0 +1,38 @@
+{
+  "name": "upload-image-crop-rotate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --open --mode development"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.8.6",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.5.2",
+    "css-loader": "^4.2.1",
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-image-crop": "^8.6.5",
+    "sass-loader": "^9.0.3",
+    "style-loader": "^1.2.1"
+  }
+}
