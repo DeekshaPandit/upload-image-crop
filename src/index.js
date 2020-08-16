@@ -7,8 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadIcon from "./assets/images/icon_upload.svg";
 import './App.css';
-// import ConfirmModal from './confirm'
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import ConfirmModal from './confirm'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function MetaDataForm() {
@@ -18,6 +18,13 @@ function MetaDataForm() {
         <h6 className="font-weight-bold">4 photos selected</h6>
       </div>
       <form>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck" name="example1"></input>
+            <label class="custom-control-label" for="customCheck">License this photo</label>
+            <p>Get paid for my photos with 500px Licensing.</p>
+          </div>
+        </div>
         <div class="form-group">
           <label for="exampleFormControlSelect1">Photo Privacy</label>
           <select class="form-control">
@@ -38,7 +45,31 @@ function MetaDataForm() {
           <label for="exampleFormControlInput1">Enter Location</label>
           <input type="email" class="form-control" placeholder="Enter Location" />
         </div>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Category</label>
+          <select class="form-control">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" name="example2"></input>
+            <label class="custom-control-label" for="customCheck1">NSFW content</label>
+            <p>This photo contains nudity, sexually explicit, or suggestive content.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck2" name="example3"></input>
+            <label class="custom-control-label" for="customCheck2">Add watermark</label>
+            <p>Add a 500px watermark to my photo when displayed..</p>
+          </div>
+        </div>
       </form>
+      <div>
+        <button class="btn btn-primary my-4">Upload</button>
+      </div>
     </div>
   </div>
 }
@@ -258,7 +289,7 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
       <img src={file.src} /> :
       <ReactCrop
         src={file.src}
-        imageStyle={{  border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }} /* write here*/
+        imageStyle={{ border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }} /* write here*/
         crop={crop}
         ruleOfThirds
         onImageLoaded={onImageLoaded}
@@ -273,7 +304,7 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
       {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
       <i class="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
       <i class="fa fa-undo mr-3" title="reset" onClick={() => { setPreview(false); setCropState(c); onResetImage(index) }}></i>
-      
+
       {/* <button onClick={() => { onRotateleft() }}> rotate Left</button>
     <button onClick={() => { onRotateRight() }}> rotate Right</button> */}</div>
   </>
@@ -345,7 +376,7 @@ class App extends Component {
     console.log("reset called!");
     let selectedFiles = [...this.state.selectedFiles];
     selectedFiles[index].src = selectedFiles[index].originalSrc;
-  
+
     this.setState({ selectedFiles: selectedFiles })
   }
 
@@ -465,17 +496,17 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
-      {/* <ConfirmModal showBox={this.state.showDeleteConfirmationBox} /> */}
+      <ConfirmModal showBox={this.state.showDeleteConfirmationBox} />
 
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
           <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
             <div class="col-12 my-4 d-flex">
-              <div class="choose_file text-center mr-2">
+              <div class="add_file text-center mr-2">
                 <span><i class="fa fa-plus"></i> Add</span>
                 <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
               </div>
-              <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
+              <button class="btn btn-second" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
             </div>
             <div class="col-12 row">
 
