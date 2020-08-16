@@ -7,34 +7,39 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadIcon from "./assets/images/icon_upload.svg";
 import './App.css';
-import ConfirmModal from './confirm'
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import ConfirmModal from './confirm'
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function MetaDataForm() {
-  return <div class="col-4 mt-4">
-    <form>
-      <div class="form-group">
-        <label for="exampleFormControlSelect1">Photo Privacy</label>
-        <select class="form-control">
-          <option>1</option>
-          <option>2</option>
-        </select>
+  return <div class="col-4 p-0">
+    <div className="form_wrapper">
+      <div className="header">
+        <h6 className="font-weight-bold">4 photos selected</h6>
       </div>
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Title</label>
-        <input type="email" class="form-control" placeholder="Title" />
-      </div>
-      <div class="form-group">
-        <label for="exampleFormControlTextarea1">Descriptions</label>
-        <textarea class="form-control" rows="3"></textarea>
-      </div>
+      <form>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Photo Privacy</label>
+          <select class="form-control">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Title</label>
+          <input type="email" class="form-control" placeholder="Title" />
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Descriptions</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
 
-      <div class="form-group">
-        <label for="exampleFormControlInput1">Enter Location</label>
-        <input type="email" class="form-control" placeholder="Enter Location" />
-      </div>
-    </form>
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Enter Location</label>
+          <input type="email" class="form-control" placeholder="Enter Location" />
+        </div>
+      </form>
+    </div>
   </div>
 }
 
@@ -234,7 +239,7 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
       <img src={file.src} /> :
       <ReactCrop
         src={file.src}
-        imageStyle={{ transform: `rotate(${rotation}deg)` }}
+        imageStyle={{ transform: `rotate(${rotation}deg)`, border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }} /* write here*/
         crop={crop}
         ruleOfThirds
         onImageLoaded={onImageLoaded}
@@ -242,12 +247,16 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
         onChange={onCropChange}
       />
     }
-
-    <button onClick={() => { onRemoveImage(index) }}> delete</button>
-    <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button>
-    <button onClick={() => { onRotateleft() }}> rotate Left</button>
-    <button onClick={() => { onRotateRight() }}> rotate Right</button>
+    <div className="">
+      <i class="fa fa-trash mr-3" onClick={() => { onRemoveImage(index) }}></i>
+      {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
+      <i class="fa fa-eye mr-3" onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}></i>
+      {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
+      <i class="fa fa-undo mr-3" onClick={() => { onRotateleft() }}></i>
+      {/* <button onClick={() => { onRotateleft() }}> rotate Left</button>
+    <button onClick={() => { onRotateRight() }}> rotate Right</button> */}</div>
   </>
+
   );
 }
 
@@ -291,7 +300,7 @@ class App extends Component {
   }
 
   onRemoveImages() {
-    this.setState({showDeleteConfirmationBox: true})
+    this.setState({ showDeleteConfirmationBox: true })
     const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
     console.log(selectedFiles);
     this.setState({ selectedFiles: selectedFiles, removeFiles: [] })
@@ -429,32 +438,32 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
-       <ConfirmModal showBox={this.state.showDeleteConfirmationBox}/> 
+      {/* <ConfirmModal showBox={this.state.showDeleteConfirmationBox}/> 
        
-      {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
-        <div class="row">
-          <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
-            <div class="col-12 my-4 d-flex">
-              <div class="choose_file text-center mr-2">
-                <span><i class="fa fa-plus"></i> Add</span>
-                <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
-              </div>
-              <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
+      {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> : */}
+      <div class="row">
+        <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
+          <div class="col-12 my-4 d-flex">
+            <div class="choose_file text-center mr-2">
+              <span><i class="fa fa-plus"></i> Add</span>
+              <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
             </div>
-            <div class="col-12 row">
-              <div class="col-3">
-                {
-                  this.state.selectedFiles.map((item, index) => {
-                    return <ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotate={this.onRotate} />
-                  })
-                }
-              </div>
-            </div>
+            <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
           </div>
-          <MetaDataForm />
+          <div class="col-12 row">
 
+            {
+              this.state.selectedFiles.map((item, index) => {
+                return <div class="col-3 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotate={this.onRotate} /></div>
+              })
+            }
 
+          </div>
         </div>
+        <MetaDataForm />
+
+
+      </div>
       }
     </div>
     );

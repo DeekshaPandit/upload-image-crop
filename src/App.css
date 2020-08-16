@@ -14,7 +14,7 @@
   .choose_file{
     position: relative;
     display: inline-block;
-    border-radius: 6px;
+    border-radius: 50px;
     border: #ebebeb solid 1px;
     min-width: 130px;
     padding: .375rem .75rem;
@@ -38,11 +38,12 @@
   width: 130px;
 }
 
-  .img_wrapper{
+  .img_upload{
+    max-height: 200px;
     width: 100%;
     object-fit: contain;
-    border-radius: 6px;
 }
+
 .img_hover{
     position: relative;
 }
@@ -51,6 +52,26 @@
 background-color: rgb(247 247 247);
 height: 100vh;
 }
+
+.form_wrapper{
+  border: 1px solid #eeeff2;
+  height: calc(100vh - 152px);
+  background: #fff;
+  position: relative;
+  overflow-y: hidden;
+  padding: 0px 15px;
+  }
+  .form_wrapper .header{
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-secondary{
+    border-radius: 50px;
+  }
 /* The overlay effect (full height and width) - lays on top of the container and over the image */
 /* .overlay {
     position: absolute;
@@ -87,3 +108,5 @@ height: 100vh;
     color: #eee;
   }
    */
+
+   
