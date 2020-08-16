@@ -1,35 +1,49 @@
 .App {
     font-family: sans-serif;
-    text-align: center;
   }
   
   img {
     max-width: 100%;
   }
 
+  .requirement{
+    text-align: left;
+    box-sizing: border-box;
+    padding: 16px 0 16px 16px;
+    width: 390px;
+    min-height: 80px;
+    background: #eeeff2;
+    display: flex;
+    flex-direction: column;
+    margin: 30px auto 0;
+    border-radius: 4px;
+  }
   .choose_file{
     position: relative;
     display: inline-block;
     border-radius: 6px;
     border: #ebebeb solid 1px;
-    width: 200px;
+    min-width: 130px;
     padding: 10px;
-    font: normal 14px Myriad Pro, Verdana, Geneva, sans-serif;
-    color: #7f7f7f;
-    margin-top: 2px;
     background: #0870d1;
-    height: 40px;
+    min-height: 40px;
     cursor: pointer;
+    margin-top: 5px;
 }
 
 .choose_file span{
   color: white;
+  cursor: pointer;
 }
 .choose_file input[type="file"]{
-    -webkit-appearance:none; 
-    position:absolute;
-    top:0; left:0;
-    opacity:0; 
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  min-height: 40px;
+  width: 130px;
 }
 
   .img_wrapper{

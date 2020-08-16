@@ -5,6 +5,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { getUserSubscription } from './user';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UploadIcon from "./assets/images/icon_upload.svg";
 import './App.css';
 
 function MetaDataForm() {
@@ -70,19 +71,30 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   return (
     <div className="container">
       <ToastContainer />
-      <div className="drop-container" onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop}>
+      <div className="drop-container text-center" onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop}>
 
         <div className="col-12">
-          <i class="fa fa-arrow-up"></i>
+          <img src={UploadIcon} className="mb-4" />
         </div>
-        <div>
+        <div className="col-12">
+          <h5 className="font-weight-bold">Upload photos</h5>
           <div class="choose_file">
             <span>Select Photos</span>
             <input name="Select File" type="file" accept="image/*" onChange={onSelectFile} multiple />
           </div>
         </div>
+        <div className="col-12 mt-5">
+          <h6>Or drag and drop photos anywhere on this page</h6>
+        </div>
       </div>
 
+      <div className="col-12">
+        <div className="requirement">
+          <h6 className="font-weight-bold">Photo requirements</h6>
+          <h6 className="">.jpg only</h6>
+          <h6 className="">Max. photo dimensions are 200MP/megapixels</h6>
+        </div>
+      </div>
       {/* <div className="file-display-container">
         {
 
@@ -223,7 +235,6 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
       onComplete={onCropComplete}
       onChange={onCropChange}
     />
-    <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
     <button onClick={() => { onRemoveImage(index) }}> delete</button>
     <button onClick={() => { onPreview(index, croppedImageUrl) }}> preview</button>
     <button onClick={() => { onRotateleft() }}> rotate Left</button>
@@ -392,7 +403,7 @@ class App extends Component {
                 <span>Add</span>
                 <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
               </div>
-              <button class="btn btn-primary"><i class="fa fa-trash"></i> Remove ({})</button>
+              <button class="btn btn-primary"><i class="fa fa-trash"></i> delete</button>
             </div>
             <div class="col-12 row">
               <div class="col-3">
