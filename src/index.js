@@ -3,16 +3,13 @@ import React, { Component, useState } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { getUserSubscription } from './user';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+
 function MetaDataForm() {
   return <div class="col-4 mt-4">
     <form>
-      <div class="form-check">
-        <label class="form-check-label">
-          <input type="checkbox" class="form-check-input" value="" />License This Photo
-          </label>
-      </div>
-
       <div class="form-group">
         <label for="exampleFormControlSelect1">Photo Privacy</label>
         <select class="form-control">
@@ -37,10 +34,7 @@ function MetaDataForm() {
   </div>
 }
 
-function ShowUploadUI() {
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
-
+function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   const dragOver = (e) => {
     e.preventDefault();
   }
@@ -56,56 +50,35 @@ function ShowUploadUI() {
   const fileDrop = (e) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
-    if (files.length) {
-      handleFiles(files);
+    if (files.length <= 5) {
+      onSelectFiles(e);
     }
-
-    console.log(files);
-  }
-  const handleFiles = (files) => {
-    for (let i = 0; i < files.length; i++) {
-      if (validateFile(files[i])) {
-        // add to an array so we can display the name of file
-        console.log("got valid file")
-      } else {
-        // add a new property called invalid
-        files[i]['invalid'] = true;
-        // add to the same array so we can display the name of the file
-        setSelectedFiles(prevArray => [...prevArray, files[i]]);
-        // set error message
-        setErrorMessage('File type not permitted');
-      }
+    else {
+      showMaxLimitMessage();
     }
-
   }
 
-  const validateFile = (file) => {
-    const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
-    if (validTypes.indexOf(file.type) === -1) {
-      return false;
-      console.log("Invalid format")
+  const onSelectFile = (e) => {
+    if (e.target.files && e.target.files.length <= 5) {
+      onSelectFiles(e);
     }
-    return true;
-  }
-
-  // get the file type
-  const fileType = (fileName) => {
-    return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length) || fileName;
-  }
+    else {
+      showMaxLimitMessage();
+    }
+  };
 
   return (
     <div className="container">
+      <ToastContainer />
       <div className="drop-container" onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop}>
-        <div className="col-12">
-          Drag and drop file or click here to upload
-        </div>
+
         <div className="col-12">
           <i class="fa fa-arrow-up"></i>
         </div>
         <div>
           <div class="choose_file">
             <span>Select Photos</span>
-            <input name="Select File" type="file" />
+            <input name="Select File" type="file" accept="image/*" onChange={onSelectFile} multiple />
           </div>
         </div>
       </div>
@@ -130,7 +103,7 @@ function ShowUploadUI() {
 }
 
 
-function ImageTile({ src, c }) {
+function ImageTile({ src, onRemoveImage, onPreview, index, c }) {
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
@@ -172,7 +145,6 @@ function ImageTile({ src, c }) {
     });
   }
 
-
   const onImageLoaded = image => {
     setImageRef(image)
   };
@@ -209,7 +181,8 @@ function ImageTile({ src, c }) {
       onChange={onCropChange}
     />
     <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
-
+    <button onClick={() => { onRemoveImage(index) }}> delete</button>
+    <button onClick={() => { onPreview(index, croppedImageUrl) }}> preview</button>
   </>
   );
 }
@@ -219,8 +192,6 @@ class App extends Component {
     super();
     this.state = {
       selectedFiles: [],
-      selectedFilesLength: 0,
-      toUpload: false,
       crop: {
         unit: '%',
         width: 30,
@@ -231,12 +202,39 @@ class App extends Component {
 
 
     this.onSelectFile = this.onSelectFile.bind(this);
+    this.onSelectFiles = this.onSelectFiles.bind(this);
     this.fileDrop = this.fileDrop.bind(this);
     this.validateFile = this.validateFile.bind(this);
+    this.onRemoveImage = this.onRemoveImage.bind(this);
+  }
+
+  onShowMaxLimitMessage() {
+    toast.error("Only 5 Images can be uploaded at a time!", {
+      position: toast.POSITION.TOP_RIGHT
+    });
+  }
+
+  onRemoveImage(index) {
+    console.log("called", index);
+    const selectedFiles = this.state.selectedFiles.filter((file, i) => i != index)
+    this.setState({ selectedFiles: selectedFiles })
+  }
+
+  onPreview(index, croppedImageUrl){
+    console.log(croppedImageUrl);
+    let selectedFiles = [...this.state.selectedFiles];
+    selectedFiles[index].originalSrc =  selectedFiles[index].src;
+    selectedFiles[index].src = croppedImageUrl;
+    this.setState({ selectedFiles: selectedFiles })
+  }
+
+  onReset(index) {
+
   }
 
   onSelectFile(e) {
     if (e.target.files && e.target.files.length > 0) {
+      console.log(e.target.files);
       const files = [];
       this.setState({ selectedFilesLength: e.target.files.length })
 
@@ -303,6 +301,26 @@ class App extends Component {
     }
   }
 
+  onSelectFiles(e) {
+    console.log("oH I am there");
+    if (e.target.files && e.target.files.length > 0) {
+      for (let i = 0; i < e.target.files.length; i++) {
+        // get item
+        const fileName = e.target.files[i].name;
+        const reader = new FileReader();
+
+        reader.addEventListener('load', () => {
+          console.log("inside", e);
+          this.setState({
+            selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }],
+          })
+        });
+
+        reader.readAsDataURL(e.target.files[i]);
+      }
+    }
+  }
+
   validateFile(file) {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
     if (validTypes.indexOf(file.type) === -1) {
@@ -314,21 +332,22 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
-      {this.state.selectedFiles.length == 0 ? <ShowUploadUI /> :
+      {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
           <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
             <div class="col-12 my-4">
-              <button class="btn btn-primary"><i class="fa fa-plus"></i> Add</button>
-              <button class="btn btn-primary"><i class="fa fa-trash"></i> Delete</button>
-            </div>
-            <div>
-              <input type="file" accept="image/*" onChange={this.onSelectFile} multiple />
+
+              <div class="choose_file">
+                <span>Add</span>
+                <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
+              </div>
+              <button class="btn btn-primary"><i class="fa fa-trash"></i> Remove ({})</button>
             </div>
             <div class="col-12 row">
               <div class="col-3">
                 {
-                  [...Array(this.state.selectedFilesLength)].map((item, index) => {
-                    return <ImageTile src={this.state.selectedFiles[index]} c={this.state.crop} />
+                  this.state.selectedFiles.map((item, index) => {
+                    return <ImageTile  index={index} src={this.state.selectedFiles[index].src} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={onPreview}/>
                   })
                 }
               </div>
