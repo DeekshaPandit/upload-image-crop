@@ -7,6 +7,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadIcon from "./assets/images/icon_upload.svg";
 import './App.css';
+import ConfirmModal from './confirm'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function MetaDataForm() {
   return <div class="col-4 mt-4">
@@ -49,6 +52,7 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   }
 
   const fileDrop = (e) => {
+    console.log("files:", e);
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files.length <= 5) {
@@ -258,6 +262,7 @@ class App extends Component {
         width: 30,
         aspect: 16 / 9,
       },
+      showDeleteConfirmationBox: false,
       userSubscription: getUserSubscription()
     };
 
@@ -286,6 +291,7 @@ class App extends Component {
   }
 
   onRemoveImages() {
+    this.setState({showDeleteConfirmationBox: true})
     const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
     console.log(selectedFiles);
     this.setState({ selectedFiles: selectedFiles, removeFiles: [] })
@@ -382,20 +388,35 @@ class App extends Component {
       for (let i = 0; i < e.target.files.length; i++) {
         // get item
         const fileName = e.target.files[i].name;
-        const fileType = e.target.files[i].type;
-        const reader = new FileReader();
+        const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
+        console.log(duplicateFiles)
+        if (duplicateFiles.length > 0) {
+          toast.info("Duplicate file found", {
+            position: toast.POSITION.TOP_RIGHT
+          });
+        }
+        else {
 
-        reader.addEventListener('load', () => {
-          console.log("inside", e);
-          this.setState({
-            selectedFiles: [...this.state.selectedFiles, { name: fileName, type: fileType, src: reader.result }],
-          })
-        });
+          const reader = new FileReader();
 
-        reader.readAsDataURL(e.target.files[i]);
+          reader.addEventListener('load', () => {
+            console.log("inside", e);
+            this.setState({
+              selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }]
+            })
+
+          });
+
+          reader.readAsDataURL(e.target.files[i]);
+
+        }
+
+
       }
     }
   }
+
+
 
   validateFile(file) {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
@@ -408,6 +429,8 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
+       <ConfirmModal showBox={this.state.showDeleteConfirmationBox}/> 
+       
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
           <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
@@ -429,6 +452,8 @@ class App extends Component {
             </div>
           </div>
           <MetaDataForm />
+
+
         </div>
       }
     </div>
