@@ -7,6 +7,31 @@
     max-width: 100%;
   }
 
+  .choose_file{
+    position: relative;
+    display: inline-block;
+    border-radius: 6px;
+    border: #ebebeb solid 1px;
+    width: 200px;
+    padding: 10px;
+    font: normal 14px Myriad Pro, Verdana, Geneva, sans-serif;
+    color: #7f7f7f;
+    margin-top: 2px;
+    background: #0870d1;
+    height: 40px;
+    cursor: pointer;
+}
+
+.choose_file span{
+  color: white;
+}
+.choose_file input[type="file"]{
+    -webkit-appearance:none; 
+    position:absolute;
+    top:0; left:0;
+    opacity:0; 
+}
+
   .img_wrapper{
     width: 100%;
     object-fit: contain;

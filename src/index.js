@@ -3,9 +3,7 @@ import React, { Component, useState } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { getUserSubscription } from './user';
-
 import './App.css';
-
 function MetaDataForm() {
   return <div class="col-4 mt-4">
     <form>
@@ -95,17 +93,24 @@ function ShowUploadUI() {
     return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length) || fileName;
   }
 
-
   return (
     <div className="container">
       <div className="drop-container" onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop}>
-        <div className="drop-message">
-          <div className="upload-icon"></div>
-                        Drag and drop file or click here to upload
-                    </div>
+        <div className="col-12">
+          Drag and drop file or click here to upload
+        </div>
+        <div className="col-12">
+          <i class="fa fa-arrow-up"></i>
+        </div>
+        <div>
+          <div class="choose_file">
+            <span>Select Photos</span>
+            <input name="Select File" type="file" />
+          </div>
+        </div>
       </div>
 
-      <div className="file-display-container">
+      {/* <div className="file-display-container">
         {
 
           selectedFiles.map((data, i) =>
@@ -117,12 +122,9 @@ function ShowUploadUI() {
               </div>
               <div className="file-remove">X</div>
             </div>
-
           )
-
         }
-
-      </div>
+      </div> */}
 
     </div>);
 }
