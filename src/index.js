@@ -78,7 +78,7 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
         </div>
         <div className="col-12">
           <h5 className="font-weight-bold">Upload photos</h5>
-          <div class="choose_file">
+          <div class="choose_file mt-2">
             <span>Select Photos</span>
             <input name="Select File" type="file" accept="image/*" onChange={onSelectFile} multiple />
           </div>
@@ -97,7 +97,6 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
       </div>
       {/* <div className="file-display-container">
         {
-
           selectedFiles.map((data, i) =>
             <div className="file-status-bar" key={i}>
               <div>
@@ -262,7 +261,6 @@ class App extends Component {
       userSubscription: getUserSubscription()
     };
 
-
     this.onSelectFile = this.onSelectFile.bind(this);
     this.onSelectFiles = this.onSelectFiles.bind(this);
     this.fileDrop = this.fileDrop.bind(this);
@@ -413,13 +411,12 @@ class App extends Component {
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
           <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
-            <div class="col-12 my-4">
-
-              <div class="choose_file">
-                <span>Add</span>
+            <div class="col-12 my-4 d-flex">
+              <div class="choose_file text-center mr-2">
+                <span><i class="fa fa-plus"></i> Add</span>
                 <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
               </div>
-              <button class="btn btn-primary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
+              <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
             </div>
             <div class="col-12 row">
               <div class="col-3">
