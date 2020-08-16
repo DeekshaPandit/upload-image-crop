@@ -120,6 +120,7 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
   const [crop, setCropState] = useState(c);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [rotation, setRotation] = useState(0);
+  const [preview, setPreview] = useState(false);
 
   const getRotateImg = (degree) => {
     const canvas = document.createElement("canvas");
@@ -226,17 +227,21 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
   }
 
   return (<>
-    <ReactCrop
-      src={file.src}
-      imageStyle={{ transform: `rotate(${rotation}deg)` }}
-      crop={crop}
-      ruleOfThirds
-      onImageLoaded={onImageLoaded}
-      onComplete={onCropComplete}
-      onChange={onCropChange}
-    />
+    {preview ?
+      <img src={file.src} /> :
+      <ReactCrop
+        src={file.src}
+        imageStyle={{ transform: `rotate(${rotation}deg)` }}
+        crop={crop}
+        ruleOfThirds
+        onImageLoaded={onImageLoaded}
+        onComplete={onCropComplete}
+        onChange={onCropChange}
+      />
+    }
+
     <button onClick={() => { onRemoveImage(index) }}> delete</button>
-    <button onClick={() => { onPreview(index, croppedImageUrl) }}> preview</button>
+    <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button>
     <button onClick={() => { onRotateleft() }}> rotate Left</button>
     <button onClick={() => { onRotateRight() }}> rotate Right</button>
   </>
@@ -248,6 +253,7 @@ class App extends Component {
     super();
     this.state = {
       selectedFiles: [],
+      removeFiles: [],
       crop: {
         unit: '%',
         width: 30,
@@ -262,6 +268,7 @@ class App extends Component {
     this.fileDrop = this.fileDrop.bind(this);
     this.validateFile = this.validateFile.bind(this);
     this.onRemoveImage = this.onRemoveImage.bind(this);
+    this.onRemoveImages = this.onRemoveImages.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onRotate = this.onRotate.bind(this);
   }
@@ -273,8 +280,17 @@ class App extends Component {
   }
 
   onRemoveImage(index) {
-    const selectedFiles = this.state.selectedFiles.filter((file, i) => i != index)
-    this.setState({ selectedFiles: selectedFiles })
+    if (!this.state.removeFiles.includes(index)) {
+      this.setState({
+        removeFiles: [...this.state.removeFiles, index]
+      });
+    }
+  }
+
+  onRemoveImages() {
+    const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
+    console.log(selectedFiles);
+    this.setState({ selectedFiles: selectedFiles, removeFiles: [] })
   }
 
   onPreview(index, croppedImageUrl) {
@@ -403,7 +419,7 @@ class App extends Component {
                 <span>Add</span>
                 <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
               </div>
-              <button class="btn btn-primary"><i class="fa fa-trash"></i> delete</button>
+              <button class="btn btn-primary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
             </div>
             <div class="col-12 row">
               <div class="col-3">
