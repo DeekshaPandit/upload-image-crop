@@ -103,12 +103,36 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
 }
 
 
-function ImageTile({ src, onRemoveImage, onPreview, index, c }) {
+function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
+  const [rotation, setRotation] = useState(0);
 
-  const getCroppedImg = (image, crop, fileName) => {
+  const getRotateImg = (degree) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // save the unrotated context of the canvas so we can restore it later
+    // the alternative is to untranslate & unrotate after drawing
+    ctx.save();
+
+    // move to the center of the canvas
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+
+    // rotate the canvas to the specified degrees
+    ctx.rotate(degree);
+
+    // draw the image
+    // since the context is rotated, the image will be rotated also
+    ctx.drawImage(imageRef, -imageRef.width / 2, -imageRef.width / 2);
+
+    // we’re done with the rotating so restore the unrotated context
+    ctx.restore();
+  }
+
+  const getCroppedImg = (image, crop) => {
     const canvas = document.createElement('canvas');
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
@@ -136,12 +160,12 @@ function ImageTile({ src, onRemoveImage, onPreview, index, c }) {
           return;
         }
 
-        blob.name = fileName;
+        blob.name = file.name;
         let fileUrl = '';
         window.URL.revokeObjectURL(fileUrl);
         fileUrl = window.URL.createObjectURL(blob);
         resolve(fileUrl);
-      }, 'image/jpeg');
+      }, file.type);
     });
   }
 
@@ -163,17 +187,36 @@ function ImageTile({ src, onRemoveImage, onPreview, index, c }) {
     if (imageRef && crop.width && crop.height) {
       const croppedImageUrl = await getCroppedImg(
         imageRef,
-        crop,
-        'newFile.jpeg'
+        crop
       );
 
       setCroppedImageUrl(croppedImageUrl);
     }
   }
 
+  const onRotateRight = () => {
+    let newRotation = rotation + 90;
+    if (newRotation >= 360) {
+      newRotation = - 360;
+    }
+
+    setRotation(newRotation);
+    getRotateImg();
+  }
+
+  const onRotateleft = () => {
+    let newRotation = rotation - 90;
+    if (newRotation >= 360) {
+      newRotation = - 360;
+    }
+
+    setRotation(newRotation);
+  }
+
   return (<>
     <ReactCrop
-      src={src}
+      src={file.src}
+      imageStyle={{ transform: `rotate(${rotation}deg)` }}
       crop={crop}
       ruleOfThirds
       onImageLoaded={onImageLoaded}
@@ -183,6 +226,8 @@ function ImageTile({ src, onRemoveImage, onPreview, index, c }) {
     <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
     <button onClick={() => { onRemoveImage(index) }}> delete</button>
     <button onClick={() => { onPreview(index, croppedImageUrl) }}> preview</button>
+    <button onClick={() => { onRotateleft() }}> rotate Left</button>
+    <button onClick={() => { onRotateRight() }}> rotate Right</button>
   </>
   );
 }
@@ -206,6 +251,8 @@ class App extends Component {
     this.fileDrop = this.fileDrop.bind(this);
     this.validateFile = this.validateFile.bind(this);
     this.onRemoveImage = this.onRemoveImage.bind(this);
+    this.onPreview = this.onPreview.bind(this);
+    this.onRotate = this.onRotate.bind(this);
   }
 
   onShowMaxLimitMessage() {
@@ -215,17 +262,20 @@ class App extends Component {
   }
 
   onRemoveImage(index) {
-    console.log("called", index);
     const selectedFiles = this.state.selectedFiles.filter((file, i) => i != index)
     this.setState({ selectedFiles: selectedFiles })
   }
 
-  onPreview(index, croppedImageUrl){
+  onPreview(index, croppedImageUrl) {
     console.log(croppedImageUrl);
     let selectedFiles = [...this.state.selectedFiles];
-    selectedFiles[index].originalSrc =  selectedFiles[index].src;
+    selectedFiles[index].originalSrc = selectedFiles[index].src;
     selectedFiles[index].src = croppedImageUrl;
     this.setState({ selectedFiles: selectedFiles })
+  }
+
+  onRotate() {
+
   }
 
   onReset(index) {
@@ -302,17 +352,18 @@ class App extends Component {
   }
 
   onSelectFiles(e) {
-    console.log("oH I am there");
+    console.log("oH I am there", e.target.files);
     if (e.target.files && e.target.files.length > 0) {
       for (let i = 0; i < e.target.files.length; i++) {
         // get item
         const fileName = e.target.files[i].name;
+        const fileType = e.target.files[i].type;
         const reader = new FileReader();
 
         reader.addEventListener('load', () => {
           console.log("inside", e);
           this.setState({
-            selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }],
+            selectedFiles: [...this.state.selectedFiles, { name: fileName, type: fileType, src: reader.result }],
           })
         });
 
@@ -347,7 +398,7 @@ class App extends Component {
               <div class="col-3">
                 {
                   this.state.selectedFiles.map((item, index) => {
-                    return <ImageTile  index={index} src={this.state.selectedFiles[index].src} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={onPreview}/>
+                    return <ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotate={this.onRotate} />
                   })
                 }
               </div>
