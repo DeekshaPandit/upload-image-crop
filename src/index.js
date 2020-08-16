@@ -88,10 +88,11 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   }
 
   const fileDrop = (e) => {
-    console.log("files:", e);
+    
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files.length <= 5) {
+      
       onSelectFiles(e);
     }
     else {
@@ -157,6 +158,7 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
 function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c }) {
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
+  const [dirty, setDirty] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [rotation, setRotation] = useState(0);
   const [preview, setPreview] = useState(false);
@@ -164,7 +166,11 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
 
   const getRotatedImg = (degree) => {
     const canvas = document.createElement("canvas");
+    
     const ctx = canvas.getContext('2d');
+     
+    // testing...just draw a rect top-left
+    ctx.fillRect(0, 0, 25, 10);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // save the unrotated context of the canvas so we can restore it later
@@ -252,7 +258,9 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
         crop
       );
 
-      setCanPreview(true)
+      
+      setDirty(true);
+      setCanPreview(true);
       setCroppedImageUrl(croppedImageUrl);
     }
   }
@@ -300,10 +308,10 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
     <div className="">
       <i class="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
       {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
-      <i class="fa fa-eye mr-3" title="preview" onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}></i>
+      <i class="fa fa-eye mr-3" title="preview" onClick={() => {  setPreview(true); onPreview(index, croppedImageUrl) }}></i>
       {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
       <i class="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
-      <i class="fa fa-undo mr-3" title="reset" onClick={() => { setPreview(false); setCropState(c); onResetImage(index) }}></i>
+      <i class="fa fa-undo mr-3" title="reset" onClick={() => { if(dirty) {setPreview(false); setCropState(c); onResetImage(index)} }}></i>
 
       {/* <button onClick={() => { onRotateleft() }}> rotate Left</button>
     <button onClick={() => { onRotateRight() }}> rotate Right</button> */}</div>
@@ -336,6 +344,7 @@ class App extends Component {
     this.onPreview = this.onPreview.bind(this);
     this.onRotateImage = this.onRotateImage.bind(this);
     this.onResetImage = this.onResetImage.bind(this);
+    this.onConfirm = this.onConfirm.bind(this);
   }
 
   onShowMaxLimitMessage() {
@@ -354,8 +363,13 @@ class App extends Component {
 
   onRemoveImages() {
     this.setState({ showDeleteConfirmationBox: true })
-    const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
-    this.setState({ selectedFiles: selectedFiles, removeFiles: [] })
+  }
+
+  onConfirm(value) {
+    if(value) {
+      const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
+      this.setState({ selectedFiles: selectedFiles, removeFiles: [], showDeleteConfirmationBox: false })
+    }
   }
 
   onPreview(index, croppedImageUrl) {
@@ -496,7 +510,7 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
-      <ConfirmModal showBox={this.state.showDeleteConfirmationBox} />
+      <ConfirmModal showBox={this.state.showDeleteConfirmationBox} onConfirm={this.onConfirm} />
 
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
