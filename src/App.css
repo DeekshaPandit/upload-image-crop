@@ -18,7 +18,7 @@
     border: #ebebeb solid 1px;
     min-width: 130px;
     padding: .375rem .75rem;
-    background: #0870d1;
+    background: #0069d9;
     cursor: pointer;
 }
 
@@ -38,6 +38,35 @@
   width: 130px;
 }
 
+.add_file{
+  position: relative;
+  display: inline-block;
+  border-radius: 50px;
+  border: #0069d9 solid 1px;
+  min-width: 80px;
+  padding: .375rem .75rem;
+  background: #fff;
+  cursor: pointer;
+  color: #0069d9;
+  font-size: 14px;
+}
+
+.add_file span{
+color: #0069d9;
+cursor: pointer;
+}
+.add_file input[type="file"]{
+-webkit-appearance: none;
+position: absolute;
+bottom: 0;
+top: 0;
+left: 0;
+opacity: 0;
+cursor: pointer;
+padding: .375rem .75rem;
+width: 80px;
+}
+
   .img_upload{
     max-height: 200px;
     width: 100%;
@@ -55,7 +84,7 @@ height: 100vh;
 
 .form_wrapper{
   border: 1px solid #eeeff2;
-  height: calc(100vh - 152px);
+  height: calc(100vh - 50px);
   background: #fff;
   position: relative;
   overflow-y: hidden;
@@ -69,8 +98,44 @@ height: 100vh;
     align-items: center;
   }
   
-  .btn-secondary{
+  .btn-second{
     border-radius: 50px;
+    color: #0069d9;
+    background-color: #ffffff;
+    font-size: 14px;
+    border-color: #0069d9;
+  }
+
+  .btn-second:hover{
+    border-radius: 50px;
+    color: #0069d9;
+    background-color: #d7ecff;
+    font-size: 14px;
+    border-color: #0069d9;
+  }
+  .btn-second:focus{
+    border-radius: 50px;
+    color: #fff;
+    background-color: #0069d9;
+    font-size: 14px;
+    border-color: #0069d9;
+    outline: none;
+  }
+  .custom-control{
+    padding-left: 2.2rem;
+  }
+  .custom-control p{
+    font-size: 12px;
+    
+  }
+  .custom-control-label::before{
+    width: 1.5rem;
+    height:1.5rem;
+  }
+
+  .custom-control-label::after{
+    width: 1.5rem;
+    height:1.5rem;
   }
 /* The overlay effect (full height and width) - lays on top of the container and over the image */
 /* .overlay {

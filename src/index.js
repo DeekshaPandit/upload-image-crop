@@ -19,6 +19,13 @@ function MetaDataForm() {
       </div>
       <form>
         <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck" name="example1"></input>
+            <label class="custom-control-label" for="customCheck">License this photo</label>
+            <p>Get paid for my photos with 500px Licensing.</p>
+          </div>
+        </div>
+        <div class="form-group">
           <label for="exampleFormControlSelect1">Photo Privacy</label>
           <select class="form-control">
             <option>1</option>
@@ -38,7 +45,31 @@ function MetaDataForm() {
           <label for="exampleFormControlInput1">Enter Location</label>
           <input type="email" class="form-control" placeholder="Enter Location" />
         </div>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Category</label>
+          <select class="form-control">
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" name="example2"></input>
+            <label class="custom-control-label" for="customCheck1">NSFW content</label>
+            <p>This photo contains nudity, sexually explicit, or suggestive content.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck2" name="example3"></input>
+            <label class="custom-control-label" for="customCheck2">Add watermark</label>
+            <p>Add a 500px watermark to my photo when displayed..</p>
+          </div>
+        </div>
       </form>
+      <div>
+      <button class="btn btn-primary my-4">Upload</button>
+      </div>
     </div>
   </div>
 }
@@ -444,11 +475,11 @@ class App extends Component {
       <div class="row">
         <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
           <div class="col-12 my-4 d-flex">
-            <div class="choose_file text-center mr-2">
+            <div class="add_file text-center mr-2">
               <span><i class="fa fa-plus"></i> Add</span>
               <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
             </div>
-            <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
+            <button class="btn btn-second" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
           </div>
           <div class="col-12 row">
 
