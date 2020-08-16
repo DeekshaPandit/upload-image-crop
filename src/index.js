@@ -7,6 +7,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadIcon from "./assets/images/icon_upload.svg";
 import './App.css';
+import ConfirmModal from './confirm'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function MetaDataForm() {
   return <div class="col-4 mt-4">
@@ -260,6 +263,7 @@ class App extends Component {
         width: 30,
         aspect: 16 / 9,
       },
+      showDeleteConfirmationBox: false,
       userSubscription: getUserSubscription()
     };
 
@@ -289,6 +293,7 @@ class App extends Component {
   }
 
   onRemoveImages() {
+    this.setState({showDeleteConfirmationBox: true})
     const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
     console.log(selectedFiles);
     this.setState({ selectedFiles: selectedFiles, removeFiles: [] })
@@ -387,7 +392,7 @@ class App extends Component {
         const fileName = e.target.files[i].name;
         const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
         console.log(duplicateFiles)
-        if(duplicateFiles.length > 0) {
+        if (duplicateFiles.length > 0) {
           toast.info("Duplicate file found", {
             position: toast.POSITION.TOP_RIGHT
           });
@@ -401,9 +406,9 @@ class App extends Component {
             this.setState({
               selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }]
             })
-  
+
           });
-          
+
           reader.readAsDataURL(e.target.files[i]);
 
         }
@@ -413,7 +418,7 @@ class App extends Component {
     }
   }
 
-   
+
 
   validateFile(file) {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
@@ -426,6 +431,8 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
+       <ConfirmModal showBox={this.state.showDeleteConfirmationBox}/> 
+       
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
           <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
@@ -448,6 +455,8 @@ class App extends Component {
             </div>
           </div>
           <MetaDataForm />
+
+
         </div>
       }
     </div>
