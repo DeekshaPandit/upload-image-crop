@@ -49,6 +49,7 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   }
 
   const fileDrop = (e) => {
+    console.log("files:", e);
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files.length <= 5) {
@@ -319,19 +320,35 @@ class App extends Component {
       for (let i = 0; i < e.target.files.length; i++) {
         // get item
         const fileName = e.target.files[i].name;
-        const reader = new FileReader();
+        const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
+        console.log(duplicateFiles)
+        if(duplicateFiles.length > 0) {
+          toast.info("Duplicate file found", {
+            position: toast.POSITION.TOP_RIGHT
+          });
+        }
+        else {
 
-        reader.addEventListener('load', () => {
-          console.log("inside", e);
-          this.setState({
-            selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }],
-          })
-        });
+          const reader = new FileReader();
 
-        reader.readAsDataURL(e.target.files[i]);
+          reader.addEventListener('load', () => {
+            console.log("inside", e);
+            this.setState({
+              selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }]
+            })
+  
+          });
+          
+          reader.readAsDataURL(e.target.files[i]);
+
+        }
+
+
       }
     }
   }
+
+   
 
   validateFile(file) {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
