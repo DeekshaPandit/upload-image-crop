@@ -100,7 +100,7 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
       <div className="col-12">
         <div className="requirement">
           <h6 className="font-weight-bold">Photo requirements</h6>
-          <h6 className="">.jpg only</h6>
+          <h6 className="">.jpg, .jpeg, .png, .tiff only</h6>
           <h6 className="">Max. photo dimensions are 200MP/megapixels</h6>
         </div>
       </div>
@@ -123,14 +123,15 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
 }
 
 
-function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
+function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c }) {
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [rotation, setRotation] = useState(0);
   const [preview, setPreview] = useState(false);
+  const [canPreview, setCanPreview] = useState(false);
 
-  const getRotateImg = (degree) => {
+  const getRotatedImg = (degree) => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -147,10 +148,21 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
 
     // draw the image
     // since the context is rotated, the image will be rotated also
-    ctx.drawImage(imageRef, -imageRef.width / 2, -imageRef.width / 2);
+    ctx.drawImage(imageRef, canvas.width / 2 - imageRef.width / 2, canvas.height / 2 - imageRef.width / 2);
 
     // we’re done with the rotating so restore the unrotated context
-    ctx.restore();
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (!blob) {
+          //reject(new Error('Canvas is empty'));
+          console.error('Canvas is empty');
+          return;
+        }
+
+        blob.name = file.name;
+        resolve(blob);
+      }, file.type);
+    });
   }
 
   const getCroppedImg = (image, crop) => {
@@ -199,8 +211,6 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
   };
 
   const onCropChange = (crop, percentCrop) => {
-    // You could also use percentCrop:
-    // this.setState({ crop: percentCrop });
     setCropState(crop);
   };
 
@@ -211,27 +221,36 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
         crop
       );
 
+      setCanPreview(true)
       setCroppedImageUrl(croppedImageUrl);
     }
   }
 
-  const onRotateRight = () => {
+  const onRotateRight = async () => {
     let newRotation = rotation + 90;
     if (newRotation >= 360) {
       newRotation = - 360;
     }
 
     setRotation(newRotation);
-    getRotateImg();
+    const rotatedImageUrl = await getRotatedImg(newRotation);
+    console.log("rotated image url", rotatedImageUrl);
+    const reader = new FileReader();
+    reader.readAsDataURL(rotatedImageUrl);
+    reader.onloadend = function () {
+      console.log(reader.result);
+      onRotateImage(index, reader.result)
+    }
   }
 
-  const onRotateleft = () => {
+  const onRotateleft = async () => {
     let newRotation = rotation - 90;
     if (newRotation >= 360) {
       newRotation = - 360;
     }
 
     setRotation(newRotation);
+    await getRotatedImg(newRotation);
   }
 
   return (<>
@@ -239,7 +258,7 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
       <img src={file.src} /> :
       <ReactCrop
         src={file.src}
-        imageStyle={{ transform: `rotate(${rotation}deg)`, border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }} /* write here*/
+        imageStyle={{  border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }} /* write here*/
         crop={crop}
         ruleOfThirds
         onImageLoaded={onImageLoaded}
@@ -248,11 +267,13 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotate, index, c }) {
       />
     }
     <div className="">
-      <i class="fa fa-trash mr-3" onClick={() => { onRemoveImage(index) }}></i>
+      <i class="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
       {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
-      <i class="fa fa-eye mr-3" onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}></i>
+      <i class="fa fa-eye mr-3" title="preview" onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}></i>
       {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
-      <i class="fa fa-undo mr-3" onClick={() => { onRotateleft() }}></i>
+      <i class="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
+      <i class="fa fa-undo mr-3" title="reset" onClick={() => { setPreview(false); setCropState(c); onResetImage(index) }}></i>
+      
       {/* <button onClick={() => { onRotateleft() }}> rotate Left</button>
     <button onClick={() => { onRotateRight() }}> rotate Right</button> */}</div>
   </>
@@ -282,7 +303,8 @@ class App extends Component {
     this.onRemoveImage = this.onRemoveImage.bind(this);
     this.onRemoveImages = this.onRemoveImages.bind(this);
     this.onPreview = this.onPreview.bind(this);
-    this.onRotate = this.onRotate.bind(this);
+    this.onRotateImage = this.onRotateImage.bind(this);
+    this.onResetImage = this.onResetImage.bind(this);
   }
 
   onShowMaxLimitMessage() {
@@ -302,24 +324,29 @@ class App extends Component {
   onRemoveImages() {
     this.setState({ showDeleteConfirmationBox: true })
     const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
-    console.log(selectedFiles);
     this.setState({ selectedFiles: selectedFiles, removeFiles: [] })
   }
 
   onPreview(index, croppedImageUrl) {
-    console.log(croppedImageUrl);
     let selectedFiles = [...this.state.selectedFiles];
     selectedFiles[index].originalSrc = selectedFiles[index].src;
     selectedFiles[index].src = croppedImageUrl;
     this.setState({ selectedFiles: selectedFiles })
   }
 
-  onRotate() {
-
+  onRotateImage(index, rotatedSrc) {
+    let selectedFiles = [...this.state.selectedFiles];
+    selectedFiles[index].originalSrc = selectedFiles[index].src;
+    selectedFiles[index].src = rotatedSrc;
+    this.setState({ selectedFiles: selectedFiles })
   }
 
-  onReset(index) {
-
+  onResetImage(index) {
+    console.log("reset called!");
+    let selectedFiles = [...this.state.selectedFiles];
+    selectedFiles[index].src = selectedFiles[index].originalSrc;
+  
+    this.setState({ selectedFiles: selectedFiles })
   }
 
   onSelectFile(e) {
@@ -392,10 +419,10 @@ class App extends Component {
   }
 
   onSelectFiles(e) {
-    console.log("oH I am there", e.target.files);
     if (e.target.files && e.target.files.length > 0) {
       for (let i = 0; i < e.target.files.length; i++) {
         // get item
+        console.log("upload files:", e.target.files);
         const fileName = e.target.files[i].name;
         const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
         console.log(duplicateFiles)
@@ -438,32 +465,32 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
-      {/* <ConfirmModal showBox={this.state.showDeleteConfirmationBox}/> 
-       
-      {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> : */}
-      <div class="row">
-        <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
-          <div class="col-12 my-4 d-flex">
-            <div class="choose_file text-center mr-2">
-              <span><i class="fa fa-plus"></i> Add</span>
-              <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
+      {/* <ConfirmModal showBox={this.state.showDeleteConfirmationBox} /> */}
+
+      {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
+        <div class="row">
+          <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
+            <div class="col-12 my-4 d-flex">
+              <div class="choose_file text-center mr-2">
+                <span><i class="fa fa-plus"></i> Add</span>
+                <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
+              </div>
+              <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
             </div>
-            <button class="btn btn-secondary" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
-          </div>
-          <div class="col-12 row">
+            <div class="col-12 row">
 
-            {
-              this.state.selectedFiles.map((item, index) => {
-                return <div class="col-3 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotate={this.onRotate} /></div>
-              })
-            }
+              {
+                this.state.selectedFiles.map((item, index) => {
+                  return <div class="col-3 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} /></div>
+                })
+              }
 
+            </div>
           </div>
+          <MetaDataForm />
+
+
         </div>
-        <MetaDataForm />
-
-
-      </div>
       }
     </div>
     );
