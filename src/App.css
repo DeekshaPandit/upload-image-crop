@@ -100,3 +100,18 @@ height: 100vh;
     color: #eee;
   }
   
+
+  /* suggestion buttons */
+
+  .btn-multi{
+    margin-left: 5px;
+  }
+
+  .btn-multi:hover {
+    color:#007bff !important;
+    background-color: white!important;
+  }
+
+  .plus-thin{
+    margin-right: 5px;
+  }
