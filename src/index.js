@@ -9,6 +9,7 @@ import UploadIcon from "./assets/images/icon_upload.svg";
 import './App.css';
 import ConfirmModal from './confirm'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SuggestionTag from './suggestion-tag'
 
 
 function MetaDataForm() {
@@ -33,6 +34,11 @@ function MetaDataForm() {
       <div class="form-group">
         <label for="exampleFormControlInput1">Enter Location</label>
         <input type="email" class="form-control" placeholder="Enter Location" />
+      </div>
+      < SuggestionTag />
+
+      <div class="form-group">
+       
       </div>
     </form>
   </div>
