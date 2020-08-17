@@ -12,13 +12,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SuggestionTag from './suggestion-tag'
 
 function MetaDataForm() {
-  return <div class="col-4 p-0">
-    <div className="edit-panel">
+  return <div class="col-3 right_panel">
+    <div className="wrapper">
       <div className="header">
         <h6 className="font-weight-bold">4 photos selected</h6>
       </div>
       <div className="scrollable-panel">
-
         <form>
           <div class="form-group">
             <label for="exampleFormControlSelect1">Photo Privacy</label>
@@ -64,10 +63,9 @@ function MetaDataForm() {
           </div>
           < SuggestionTag />
         </form>
-
       </div>
-      <div>
-        <button class="btn btn-primary my-4">Upload</button>
+      <div className="submit_form">
+        <button class="btn btn-primary">Upload</button>
       </div>
    
   </div>
@@ -524,7 +522,7 @@ class App extends Component {
 
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
-          <div class="col-8 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
+          <div class="col-9 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
             <div class="col-12 my-4 d-flex">
               <div class="add_file text-center mr-2">
                 <span><i class="fa fa-plus"></i> Add</span>

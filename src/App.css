@@ -1,7 +1,6 @@
 
 .image-container {
   overflow-y: scroll;
-  height:  calc(100vh - 50px);;
 }
 
   .requirement{
@@ -15,6 +14,10 @@
     flex-direction: column;
     margin: 30px auto 0;
     border-radius: 4px;
+  }
+
+  .requirement h6 {
+    font-size: 14px;
   }
   .choose_file{
     position: relative;
@@ -104,11 +107,11 @@ height: 100vh;
   }
   
   .btn-second{
-    border-radius: 50px;
-    color: #0069d9;
-    background-color: #ffffff;
-    font-size: 14px;
-    border-color: #0069d9;
+    border-radius: 50px!important;
+    color: #0069d9!important;
+    background-color: #ffffff!important;
+    font-size: 14px!important;
+    border-color: #0069d9!important;
   }
 
   .btn-second:hover{
@@ -142,6 +145,47 @@ height: 100vh;
     width: 1.5rem;
     height:1.5rem;
   }
+
+  .right_panel{
+    height: 100%;
+    background: #fff;
+    border: 1px solid #eeeff2;
+    box-sizing: border-box;
+    padding: 0px!important;
+  }
+
+  .right_panel .wrapper{
+    border: 1px solid #eeeff2;
+    height: calc(100vh - 2px);
+    background: #fff;
+    position: relative;
+    overflow-y: hidden;
+  }
+
+ .right_panel .wrapper .header{
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 52px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+  .scrollable-panel{
+    height: calc(100% - 100px);
+    overflow-y: scroll;
+    padding: 0px 16px;
+  }
+
+  .submit_form{
+    height: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
 /* The overlay effect (full height and width) - lays on top of the container and over the image */
 /* .overlay {
     position: absolute;
