@@ -1,3 +1,3 @@
 export function getUserSubscription (){ 
-    return "BASIC";
+    return {name: "BASIC", maximumPictures: 10};
 }

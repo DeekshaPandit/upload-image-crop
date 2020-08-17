@@ -1,4 +1,9 @@
 
+.image-container {
+  overflow-y: scroll;
+  height:  calc(100vh - 50px);;
+}
+
   .requirement{
     text-align: left;
     box-sizing: border-box;

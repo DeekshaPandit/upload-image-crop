@@ -10,63 +10,60 @@ import './App.css';
 import ConfirmModal from './confirm'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 function MetaDataForm() {
   return <div class="col-4 p-0">
-    <div className="form_wrapper">
+    <div className="edit-panel">
       <div className="header">
         <h6 className="font-weight-bold">4 photos selected</h6>
       </div>
-      <form>
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="customCheck" name="example1"></input>
-            <label class="custom-control-label" for="customCheck">License this photo</label>
-            <p>Get paid for my photos with 500px Licensing.</p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlSelect1">Photo Privacy</label>
-          <select class="form-control">
-            <option>1</option>
-            <option>2</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlInput1">Title</label>
-          <input type="email" class="form-control" placeholder="Title" />
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Descriptions</label>
-          <textarea class="form-control" rows="3"></textarea>
-        </div>
+      <div className="scrollable-panel">
 
-        <div class="form-group">
-          <label for="exampleFormControlInput1">Enter Location</label>
-          <input type="email" class="form-control" placeholder="Enter Location" />
-        </div>
-        <div class="form-group">
-          <label for="exampleFormControlSelect1">Category</label>
-          <select class="form-control">
-            <option>1</option>
-            <option>2</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="customCheck1" name="example2"></input>
-            <label class="custom-control-label" for="customCheck1">NSFW content</label>
-            <p>This photo contains nudity, sexually explicit, or suggestive content.</p>
+        <form>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Photo Privacy</label>
+            <select class="form-control">
+              <option>Public Accessible everywhere, including on Profile</option>
+              <option>Unlisted Accessible everywhere, except on Profile</option>
+              <option>Limited access Only visible to you, unless added to a Gallery</option>
+            </select>
           </div>
-        </div>
-        <div class="form-group">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="customCheck2" name="example3"></input>
-            <label class="custom-control-label" for="customCheck2">Add watermark</label>
-            <p>Add a 500px watermark to my photo when displayed..</p>
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Title</label>
+            <input type="email" class="form-control" placeholder="Title" />
           </div>
-        </div>
-      </form>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Description</label>
+            <textarea class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Enter Location</label>
+            <input type="email" class="form-control" placeholder="Enter Location" />
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Category</label>
+            <select class="form-control">
+              <option>1</option>
+              <option>2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="customCheck1" name="example2"></input>
+              <label class="custom-control-label" for="customCheck1">NSFW content</label>
+              <p>This photo contains nudity, sexually explicit, or suggestive content.</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="customCheck2" name="example3"></input>
+              <label class="custom-control-label" for="customCheck2">Add watermark</label>
+              <p>Add a 500px watermark to my photo when displayed..</p>
+            </div>
+          </div>
+        </form>
+
+      </div>
       <div>
         <button class="btn btn-primary my-4">Upload</button>
       </div>
@@ -88,11 +85,11 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   }
 
   const fileDrop = (e) => {
-    
+
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files.length <= 5) {
-      
+
       onSelectFiles(e);
     }
     else {
@@ -111,7 +108,7 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
 
   return (
     <div className="container">
-      <ToastContainer />
+
       <div className="drop-container text-center" onDragOver={dragOver} onDragEnter={dragEnter} onDragLeave={dragLeave} onDrop={fileDrop}>
 
         <div className="col-12">
@@ -154,38 +151,33 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
     </div>);
 }
 
-
-function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c }) {
+function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c, onImageSelect }) {
+  const ImageStyle = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
   const [dirty, setDirty] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [rotation, setRotation] = useState(0);
   const [preview, setPreview] = useState(false);
-  const [canPreview, setCanPreview] = useState(false);
 
   const getRotatedImg = (degree) => {
     const canvas = document.createElement("canvas");
-    
     const ctx = canvas.getContext('2d');
-     
-    // testing...just draw a rect top-left
-    ctx.fillRect(0, 0, 25, 10);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // save the unrotated context of the canvas so we can restore it later
-    // the alternative is to untranslate & unrotate after drawing
-    ctx.save();
+
+    // draw the image
+    // since the context is rotated, the image will be rotated also
+    const img = new Image();
+    img.src = file.src;
+    canvas.width = 2000;
+    canvas.height = 2000;
 
     // move to the center of the canvas
     ctx.translate(canvas.width / 2, canvas.height / 2);
 
     // rotate the canvas to the specified degrees
-    ctx.rotate(degree);
-
-    // draw the image
-    // since the context is rotated, the image will be rotated also
-    ctx.drawImage(imageRef, canvas.width / 2 - imageRef.width / 2, canvas.height / 2 - imageRef.width / 2);
+    ctx.rotate(degree * Math.PI / 180);
+    ctx.drawImage(img, -img.width / 2, -img.height / 2);
 
     // we’re done with the rotating so restore the unrotated context
     return new Promise((resolve, reject) => {
@@ -231,10 +223,10 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
         }
 
         blob.name = file.name;
-        let fileUrl = '';
-        window.URL.revokeObjectURL(fileUrl);
-        fileUrl = window.URL.createObjectURL(blob);
-        resolve(fileUrl);
+        // let fileUrl = '';
+        // window.URL.revokeObjectURL(fileUrl);
+        // fileUrl = window.URL.createObjectURL(blob);
+        resolve(blob);
       }, file.type);
     });
   }
@@ -258,28 +250,22 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
         crop
       );
 
-      
       setDirty(true);
-      setCanPreview(true);
       setCroppedImageUrl(croppedImageUrl);
     }
   }
 
-  const onRotateRight = async () => {
-    let newRotation = rotation + 90;
-    if (newRotation >= 360) {
-      newRotation = - 360;
-    }
+  const previewImage = () => {
+    setPreview(true);
+    onPreview(index, croppedImageUrl)
+  }
 
-    setRotation(newRotation);
-    const rotatedImageUrl = await getRotatedImg(newRotation);
-    console.log("rotated image url", rotatedImageUrl);
-    const reader = new FileReader();
-    reader.readAsDataURL(rotatedImageUrl);
-    reader.onloadend = function () {
-      console.log(reader.result);
-      onRotateImage(index, reader.result)
-    }
+  const onRotateRight = async () => {
+    setImageRef('');
+    //setRotation(newRotation);
+    setDirty(true);
+    const rotatedImageUrl = await getRotatedImg(90);
+    onRotateImage(index, rotatedImageUrl)
   }
 
   const onRotateleft = async () => {
@@ -292,12 +278,12 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
     await getRotatedImg(newRotation);
   }
 
-  return (<>
+  return (<div onSelect={() => { onImageSelect(index); }}>
     {preview ?
-      <img src={file.src} /> :
+      <img style={ImageStyle} src={file.src} /> :
       <ReactCrop
         src={file.src}
-        imageStyle={{ border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }} /* write here*/
+        imageStyle={ImageStyle} /* write here*/
         crop={crop}
         ruleOfThirds
         onImageLoaded={onImageLoaded}
@@ -308,15 +294,14 @@ function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage
     <div className="">
       <i class="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
       {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
-      <i class="fa fa-eye mr-3" title="preview" onClick={() => {  setPreview(true); onPreview(index, croppedImageUrl) }}></i>
+      <i class="fa fa-eye mr-3" title="preview" onClick={() => { if (dirty) { previewImage(); } }}></i>
       {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
       <i class="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
-      <i class="fa fa-undo mr-3" title="reset" onClick={() => { if(dirty) {setPreview(false); setCropState(c); onResetImage(index)} }}></i>
+      <i class="fa fa-undo mr-3" title="reset" onClick={() => { if (dirty) { setPreview(false); setCropState(c); setRotation(0); onResetImage(index) } }}></i>
 
       {/* <button onClick={() => { onRotateleft() }}> rotate Left</button>
     <button onClick={() => { onRotateRight() }}> rotate Right</button> */}</div>
-  </>
-
+  </div>
   );
 }
 
@@ -353,41 +338,57 @@ class App extends Component {
     });
   }
 
+  onShowUpgradeMessage() {
+    toast.info("Please upgrade your subscription to upload more pictures!")
+  }
   onRemoveImage(index) {
-    if (!this.state.removeFiles.includes(index)) {
-      this.setState({
-        removeFiles: [...this.state.removeFiles, index]
-      });
-    }
+    this.setState({ showDeleteConfirmationBox: true, removeFiles: [index] })
+
   }
 
   onRemoveImages() {
-    this.setState({ showDeleteConfirmationBox: true })
+    if (this.state.selectedFiles.length > 0) {
+      this.setState({ showDeleteConfirmationBox: true })
+    }
   }
 
   onConfirm(value) {
-    if(value) {
+    if (value && this.state.removeFiles.length > 0) {
       const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
       this.setState({ selectedFiles: selectedFiles, removeFiles: [], showDeleteConfirmationBox: false })
+    }
+    else if (value) {
+      this.setState({ selectedFiles: [], removeFiles: [], showDeleteConfirmationBox: false })
+    }
+    else {
+      this.setState({ showDeleteConfirmationBox: false, removeFiles: [] });
     }
   }
 
   onPreview(index, croppedImageUrl) {
-    let selectedFiles = [...this.state.selectedFiles];
-    selectedFiles[index].originalSrc = selectedFiles[index].src;
-    selectedFiles[index].src = croppedImageUrl;
-    this.setState({ selectedFiles: selectedFiles })
+
+    const reader = new FileReader();
+    reader.readAsDataURL(croppedImageUrl);
+    reader.addEventListener('load', () => {
+      let selectedFiles = [...this.state.selectedFiles];
+      selectedFiles[index].src = reader.result;
+      this.setState({ selectedFiles: selectedFiles })
+
+    });
+
   }
 
-  onRotateImage(index, rotatedSrc) {
-    let selectedFiles = [...this.state.selectedFiles];
-    selectedFiles[index].originalSrc = selectedFiles[index].src;
-    selectedFiles[index].src = rotatedSrc;
-    this.setState({ selectedFiles: selectedFiles })
+  onRotateImage(index, rotatedImageUrl) {
+    const reader = new FileReader();
+    reader.readAsDataURL(rotatedImageUrl);
+    reader.addEventListener('load', () => {
+      let selectedFiles = [...this.state.selectedFiles];
+      selectedFiles[index].src = reader.result;
+      this.setState({ selectedFiles: selectedFiles })
+    });
   }
 
   onResetImage(index) {
-    console.log("reset called!");
     let selectedFiles = [...this.state.selectedFiles];
     selectedFiles[index].src = selectedFiles[index].originalSrc;
 
@@ -464,40 +465,45 @@ class App extends Component {
   }
 
   onSelectFiles(e) {
-    if (e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target.files.length > 5) {
+      this.onShowMaxLimitMessage();
+    }
+    else if (e.target.files && e.target.files.length > 0) {
       for (let i = 0; i < e.target.files.length; i++) {
         // get item
-        console.log("upload files:", e.target.files);
-        const fileName = e.target.files[i].name;
-        const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
-        console.log(duplicateFiles)
-        if (duplicateFiles.length > 0) {
-          toast.info("Duplicate file found", {
-            position: toast.POSITION.TOP_RIGHT
-          });
+        if (this.state.selectedFiles.length + i + 1 <= this.state.userSubscription.maximumPictures) {
+          console.log("upload files:", e.target.files);
+          const fileName = e.target.files[i].name;
+          const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
+          console.log(duplicateFiles)
+          if (duplicateFiles.length > 0) {
+            toast.info(`This file has already been uploaded: ${duplicateFiles[0].name}`, {
+              position: toast.POSITION.TOP_RIGHT
+            });
+          }
+          else {
+
+            const reader = new FileReader();
+
+            reader.addEventListener('load', () => {
+              console.log("inside", e);
+              this.setState({
+                selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result, originalSrc: reader.result }]
+              })
+
+            });
+
+            reader.readAsDataURL(e.target.files[i]);
+
+          }
         }
         else {
-
-          const reader = new FileReader();
-
-          reader.addEventListener('load', () => {
-            console.log("inside", e);
-            this.setState({
-              selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result }]
-            })
-
-          });
-
-          reader.readAsDataURL(e.target.files[i]);
-
+          this.onShowUpgradeMessage();
         }
-
 
       }
     }
   }
-
-
 
   validateFile(file) {
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/x-icon"];
@@ -510,7 +516,8 @@ class App extends Component {
 
   render() {
     return (<div class="container-fluid App">
-      <ConfirmModal showBox={this.state.showDeleteConfirmationBox} onConfirm={this.onConfirm} />
+      <ToastContainer />
+      <ConfirmModal showBox={this.state.showDeleteConfirmationBox} onConfirm={this.onConfirm} photosLength={this.state.removeFiles.length > 0 ? this.state.removeFiles.length : this.state.selectedFiles.length} />
 
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div class="row">
@@ -520,13 +527,13 @@ class App extends Component {
                 <span><i class="fa fa-plus"></i> Add</span>
                 <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
               </div>
-              <button class="btn btn-second" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.removeFiles.length})</button>
+              <button class="btn btn-second" onClick={this.onRemoveImages}><i class="fa fa-trash"></i> Remove ({this.state.selectedFiles.length})</button>
             </div>
-            <div class="col-12 row">
+            <div class="col-12 row   image-container">
 
               {
                 this.state.selectedFiles.map((item, index) => {
-                  return <div class="col-3 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} /></div>
+                  return <div class="col-4 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} /></div>
                 })
               }
 
