@@ -1,10 +1,8 @@
-.App {
-    font-family: sans-serif;
-  }
-  
-  img {
-    max-width: 100%;
-  }
+
+.image-container {
+  overflow-y: scroll;
+  height:  calc(100vh - 50px);;
+}
 
   .requirement{
     text-align: left;
@@ -21,14 +19,12 @@
   .choose_file{
     position: relative;
     display: inline-block;
-    border-radius: 6px;
+    border-radius: 50px;
     border: #ebebeb solid 1px;
     min-width: 130px;
-    padding: 10px;
-    background: #0870d1;
-    min-height: 40px;
+    padding: .375rem .75rem;
+    background: #0069d9;
     cursor: pointer;
-    margin-top: 5px;
 }
 
 .choose_file span{
@@ -38,19 +34,50 @@
 .choose_file input[type="file"]{
   -webkit-appearance: none;
   position: absolute;
+  bottom: 0;
   top: 0;
   left: 0;
   opacity: 0;
   cursor: pointer;
-  min-height: 40px;
+  padding: .375rem .75rem;
   width: 130px;
 }
 
-  .img_wrapper{
+.add_file{
+  position: relative;
+  display: inline-block;
+  border-radius: 50px;
+  border: #0069d9 solid 1px;
+  min-width: 80px;
+  padding: .375rem .75rem;
+  background: #fff;
+  cursor: pointer;
+  color: #0069d9;
+  font-size: 14px;
+}
+
+.add_file span{
+color: #0069d9;
+cursor: pointer;
+}
+.add_file input[type="file"]{
+-webkit-appearance: none;
+position: absolute;
+bottom: 0;
+top: 0;
+left: 0;
+opacity: 0;
+cursor: pointer;
+padding: .375rem .75rem;
+width: 80px;
+}
+
+  .img_upload{
+    max-height: 200px;
     width: 100%;
     object-fit: contain;
-    border-radius: 6px;
 }
+
 .img_hover{
     position: relative;
 }
@@ -59,8 +86,64 @@
 background-color: rgb(247 247 247);
 height: 100vh;
 }
+
+.form_wrapper{
+  border: 1px solid #eeeff2;
+  height: calc(100vh - 50px);
+  background: #fff;
+  position: relative;
+  overflow-y: hidden;
+  padding: 0px 15px;
+  }
+  .form_wrapper .header{
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .btn-second{
+    border-radius: 50px;
+    color: #0069d9;
+    background-color: #ffffff;
+    font-size: 14px;
+    border-color: #0069d9;
+  }
+
+  .btn-second:hover{
+    border-radius: 50px;
+    color: #0069d9;
+    background-color: #d7ecff;
+    font-size: 14px;
+    border-color: #0069d9;
+  }
+  .btn-second:focus{
+    border-radius: 50px;
+    color: #fff;
+    background-color: #0069d9;
+    font-size: 14px;
+    border-color: #0069d9;
+    outline: none;
+  }
+  .custom-control{
+    padding-left: 2.2rem;
+  }
+  .custom-control p{
+    font-size: 12px;
+    
+  }
+  .custom-control-label::before{
+    width: 1.5rem;
+    height:1.5rem;
+  }
+
+  .custom-control-label::after{
+    width: 1.5rem;
+    height:1.5rem;
+  }
 /* The overlay effect (full height and width) - lays on top of the container and over the image */
-.overlay {
+/* .overlay {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -72,15 +155,10 @@ height: 100vh;
     transition: .4s ease;
     background-color: rgb(0, 0, 0);
     border-radius: 6px;
-  }
-  
-  /* When you mouse over the container, fade in the overlay icon*/
-  .img_hover:hover .overlay {
-    /* opacity: 0.8; */
-  }
-  
+  } */
+    
   /* The icon inside the overlay is positioned in the middle vertically and horizontally */
-  .icon {
+  /* .icon {
     color: white;
     font-size: 32px;
     position: absolute;
@@ -89,17 +167,16 @@ height: 100vh;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     text-align: center;
-  }
+  } */
 
-  .icon:hover{
+  /* .icon:hover{
       color: #fff;
-  }
+  } */
   
   /* When you move the mouse over the icon, change color */
-  .fa-trash:hover {
+  /* .fa-trash:hover {
     color: #eee;
   }
-  
 
   /* suggestion buttons */
 
