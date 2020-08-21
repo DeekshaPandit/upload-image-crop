@@ -2,12 +2,11 @@ import ReactDOM from 'react-dom';
 import React, { Component, useState } from 'react';
 
 
-function SuggestionTag() {
-    const [tags, setTags] = React.useState(['Hi', 'Hello', 'How Are You']);
+function SuggestionTag({ tags, addTag }) {
 
     const addTags = (event) => {
         if ((event.key === "Enter" || event.key === "Space") && event.target.value != "") {
-            setTags([...tags, event.target.value]);
+            addTag([...tags, event.target.value]);
             event.target.value = ""
         }
     }
@@ -17,9 +16,9 @@ function SuggestionTag() {
             <label for="exampleFormControlInput1">Key Words</label>
             <div className="card">
                 <div className="card-body">
-                    <input className="form-control" type="text" onKeyUp={event => addTags(event)} placeholder="Press enter to add tags"/>
+                    <input className="form-control" type="text" onKeyUp={event => addTags(event)} placeholder="Press enter to add tags" />
                     <div className="tags-input">
-                        <div className="d-flex">
+                        <div className="d-flex flex-wrap">
                             {tags.map((tag, index) => (
                                 <div key={index}>
 

@@ -3,6 +3,10 @@
   overflow-y: scroll;
 }
 
+.image-container p {
+  font-size: 12px;
+}
+
   .requirement{
     text-align: left;
     box-sizing: border-box;
