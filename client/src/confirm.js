@@ -17,10 +17,10 @@ function ConfirmModal({ showBox, onConfirm, cancel, photosLength }) {
         </Modal.Header>
         <Modal.Body>{cancel ? "Are you sure you want to leave without saving? Your changes will be lost." : `Are you sure to delete ${photosLength} photos?`}</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => { onConfirm(false) }}>
+          <Button variant="secondary" className="btn btn-second mr-2" onClick={() => { onConfirm(false) }}>
             Cancel
             </Button>
-          <Button variant="primary" className="btn btn-danger" onClick={() => { onConfirm(true) }}>
+          <Button variant="primary" className="btn btn-primary" onClick={() => { onConfirm(true) }}>
             {cancel ? "Leave without saving" : "Confirm and Remove"}
           </Button>
         </Modal.Footer>

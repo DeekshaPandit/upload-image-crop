@@ -1,6 +1,8 @@
 import React, { Component, useState } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import Loader from 'react-loader-spinner';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c, onImageSelect }) {
 
@@ -120,30 +122,44 @@ export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onRes
     onRotateImage(index, rotatedImageUrl)
   }
 
-  return (<div onClick={() => { onImageSelect(index); }}>
-    {preview ?
-      <img style={ImageStyle} src={file.src} /> :
-      <ReactCrop
-        src={file.src}
-        imageStyle={ImageStyle} /* write here*/
-        crop={crop}
-        ruleOfThirds
-        onImageLoaded={onImageLoaded}
-        onComplete={onCropComplete}
-        onChange={onCropChange}
-      />
-    }
-     <p>{file.metaData.title}</p>
-    <div className="">
-      <i className="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
-      {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
-      <i className="fa fa-eye mr-3" title="preview" onClick={() => { if (dirty) { previewImage(); } }}></i>
-      {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
-      <i className="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
-      <i className="fa fa-undo mr-3" title="reset" onClick={() => { if (dirty) { setPreview(false); setCropState(c); setRotation(0); onResetImage(index) } }}></i>
+  const onSelectImage = (e) => {
+    e.persist();
+    console.log(e);
+    onImageSelect(index);
+  }
 
-      {/* <button onClick={() => { onRotateleft() }}> rotate Left</button>
-      <button onClick={() => { onRotateRight() }}> rotate Right</button> */}</div>
+  return (<div onClick={onSelectImage}>
+    {file.loading ? <Loader
+      type="Puff"
+      color="#00BFFF"
+      height={20}
+      width={20}
+      timeout={10000} /> :
+      <>
+        {preview ?
+          <img style={ImageStyle} src={file.src} /> :
+          <ReactCrop
+            src={file.src}
+            imageStyle={ImageStyle} /* write here*/
+            crop={crop}
+            ruleOfThirds
+            onImageLoaded={onImageLoaded}
+            onComplete={onCropComplete}
+            onChange={onCropChange}
+          />
+        }
+        <p>{file.metaData.title}</p>
+        <div className="">
+          <i className="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
+          {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
+          <i className="fa fa-eye mr-3" title="preview" onClick={() => { if (dirty) { previewImage(); } }}></i>
+          {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
+          <i className="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
+          <i className="fa fa-undo mr-3" title="reset" onClick={() => { if (dirty) { setPreview(false); setCropState(c); setRotation(0); onResetImage(index) } }}></i>
+        </div>
+      </>
+    }
+
   </div>
   );
 }

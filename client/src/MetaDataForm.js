@@ -8,9 +8,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export function MetaDataForm({ index, metaData, onInputChange }) {
     return <div className="scrollable-panel">
-
         <form noValidate>
             <div className="form-group">
+            {index.length > 1 ? <p>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
+
                 <label for="exampleFormControlSelect1">Photo Privacy</label>
                 <select name="privacy" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>
                     <option value="public">Public Accessible everywhere, including on Profile</option>
@@ -28,23 +29,22 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
             </div>
 
             <div className="form-group">
-                <label for="exampleFormControlInput1">Enter Location</label>
-                <input type="text" className="form-control" placeholder="Enter Location" value={metaData.location} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
+                <label for="exampleFormControlInput1">Location</label>
+                <input type="text" name="location" className="form-control" placeholder="Enter Location" value={metaData.location} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
             </div>
-            <div className="form-row">
+            
                 <div className="form-group">
                     <label for="exampleFormControlInput1">Breath</label>
-                    <input type="text" className="form-control" placeholder="Enter Breath" value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
+                    <input type="text" name="breath" className="form-control" placeholder="Enter Breath" value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
                 </div>
                 <div className="form-group">
                     <label for="exampleFormControlInput1">Length</label>
-                    <input type="text" className="form-control" placeholder="Enter Length" value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
+                    <input type="text" name="length" className="form-control" placeholder="Enter Length" value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
                 </div>
                 <div className="form-group">
                     <label for="exampleFormControlInput1">Width</label>
-                    <input type="text" className="form-control" placeholder="Enter Width" value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
+                    <input type="text" name="width" className="form-control" placeholder="Enter Width" value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
                 </div>
-            </div>
             <div className="form-group">
                 <label for="exampleFormControlSelect1">Category</label>
                 <select name="category" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>
@@ -70,7 +70,7 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                     <p>Add a 500px watermark to my photo when displayed..</p>
                 </div>
             </div>
-            <SuggestionTag tags={metaData.tags} addTag={(value) => { onInputChange(index, "tag", value) }} />
+            <SuggestionTag tags={metaData.tags} addTag={(value) => { onInputChange(index, "tags", value) }} />
         </form>
     </div>
 }

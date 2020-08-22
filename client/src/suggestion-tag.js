@@ -6,9 +6,16 @@ function SuggestionTag({ tags, addTag }) {
 
     const addTags = (event) => {
         if ((event.key === "Enter" || event.key === "Space") && event.target.value != "") {
-            addTag([...tags, event.target.value]);
+            if (!(tags.map(function (item) { return item.toLowerCase() }).indexOf(event.target.value.toLowerCase()) != -1)) {
+                addTag([...tags, event.target.value]);
+            }
             event.target.value = ""
         }
+    }
+
+    const removeTag = (index) => {
+        let allTags = tags.filter((tag, i) => i != index);
+        addTag(allTags)
     }
 
     return (
@@ -22,7 +29,7 @@ function SuggestionTag({ tags, addTag }) {
                             {tags.map((tag, index) => (
                                 <div key={index}>
 
-                                    <button type="button" className="btn btn-outline-primary mr-2 mt-2" ><i className="fa fa-plus plus-thin"> </i>{tag}</button>
+                                    <button type="button" className="btn btn-outline-primary mr-2 mt-2" >{tag}<i className="fa fa-times times-thin" onClick={event => removeTag(index)}> </i></button>
                                 </div>
                             ))}
 

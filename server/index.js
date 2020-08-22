@@ -1,18 +1,35 @@
 const express = require("express");
 const multer = require('multer');
 const { Client } = require('pg');
-const { parse } = require('./parse-multipart')
+const path = require('path')
+const fs = require("fs");
+const { parse } = require('./multipart-parse')
 var connectionString = "postgres://postgres:admin@localhost:5432/PaintingCompetition";
 const client = new Client({
     connectionString: connectionString
 });
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './images')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+})
+
+var upload = multer({ storage: storage }).any()
 
 client.connect();
 
 const app = express();
 const bodyparser = require("body-parser");
 
-const port = process.env.PORT || 3200;
+const port = process.env.PORT || 4200;
+app.use(express.urlencoded());
+
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
 
 // middleware
 app.use(function (req, res, next) {
@@ -21,31 +38,38 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.post('/uploadFiles', async (request, response) => {
-    request.on('data', async (data) => {
-        const result =  await parse(data.toString('utf-8'));
-        console.log(result);
-       // console.log(result);
-        // const insertQuery = `INSERT INTO ecanvas_image_info (image_title,image_size_length,image_size_breadth,image_size_width,image_loaded_on)
-        // VALUES ()`;
-        // client.query(insertQuery, function (err, result) {
-        //     console.log(err);
-        //     console.log(result);
-        //     if (err) {
-        //         console.log(err);
-        //         response.status(400).send(err);
-        //     }
-
-        //     response.status(200).send(result);
-        // });
-
-       return response.status(200).json({ submitted: true });
-    });
-    console.log("got request, upload files!");
+app.post('/uploadFile', async (req, res, next) => {
+    // upload(req, res, function (err) {
+         
+    //     if (err instanceof multer.MulterError) {
+    //         console.error(err)
+    //         return res.status(500).json(err)
+    //     } else if (err) {
+    //         console.error(err)
+    //         return res.status(500).json(err)
+    //     }
+      return res.status(200).send({filePath: `rge`})
+    // })
 });
 
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: false }));
+app.post('/uploadFiles', async (req, res, next) => {
+    upload(req, res, function (err) {
+        
+        if (err instanceof multer.MulterError) {
+            console.error(err)
+            return res.status(500).json(err)
+        } else if (err) {
+            console.error(err)
+            return res.status(500).json(err)
+        }
+
+        Object.keys(req.body).forEach((key,i)=> {
+            
+        })
+        console.log(req.body)
+});
+});
+
 
 app.listen(port, () => {
     console.log(`running at port ${port}`);

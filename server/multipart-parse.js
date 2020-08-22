@@ -20,10 +20,10 @@ const Busboy = require('busboy');
         field2: 'VALUE2',
     }
  */
-const parse = (event) => new Promise((resolve, reject) => {
+const parse = (body, contentType) => new Promise((resolve, reject) => {
     const busboy = new Busboy({
         headers: {
-            'content-type': event.headers['content-type'] || event.headers['Content-Type']
+            'content-type': contentType
         }
     });
     const result = {
@@ -49,7 +49,7 @@ const parse = (event) => new Promise((resolve, reject) => {
     });
 
     busboy.on('field', (fieldname, value) => {
-        result[fieldname] = value;
+        result[fieldname] = JSON.parse(value);
     });
 
     busboy.on('error', error => {
@@ -59,8 +59,8 @@ const parse = (event) => new Promise((resolve, reject) => {
     busboy.on('finish', () => {
         resolve(result);
     });
-
-    busboy.write(event.body, event.isBase64Encoded ? 'base64' : 'binary');
+ 
+    busboy.write(body, 'binary');
     busboy.end();
 });
 
