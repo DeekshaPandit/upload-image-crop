@@ -31,7 +31,6 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                 <label for="exampleFormControlInput1">Enter Location</label>
                 <input type="text" className="form-control" placeholder="Enter Location" value={metaData.location} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
             </div>
-            <div className="form-row">
                 <div className="form-group">
                     <label for="exampleFormControlInput1">Breath</label>
                     <input type="text" className="form-control" placeholder="Enter Breath" value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
@@ -44,7 +43,6 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                     <label for="exampleFormControlInput1">Width</label>
                     <input type="text" className="form-control" placeholder="Enter Width" value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
                 </div>
-            </div>
             <div className="form-group">
                 <label for="exampleFormControlSelect1">Category</label>
                 <select name="category" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>

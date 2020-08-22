@@ -20,7 +20,7 @@ function ConfirmModal({ showBox, onConfirm, cancel, photosLength }) {
           <Button variant="secondary" onClick={() => { onConfirm(false) }}>
             Cancel
             </Button>
-          <Button variant="primary" className="btn btn-danger" onClick={() => { onConfirm(true) }}>
+          <Button variant="primary" className="btn btn-primary" onClick={() => { onConfirm(true) }}>
             {cancel ? "Leave without saving" : "Confirm and Remove"}
           </Button>
         </Modal.Footer>

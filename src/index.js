@@ -343,7 +343,7 @@ class App extends Component {
 
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div className="row">
-          <div className="col-9 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
+          <div className="col-12 col-md-8 col-lg-8 col-xl-9 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
             <div className="col-12 my-4 d-flex">
               <div className="add_file text-center mr-2">
                 <span><i className="fa fa-plus"></i> Add</span>
@@ -355,13 +355,13 @@ class App extends Component {
 
               {
                 this.state.selectedFiles.map((item, index) => {
-                  return <div className="col-4 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} onImageSelect={this.onImageSelect} /></div>
+                  return <div className="col-12 col-md-4 col-lg-4 col-xl-3 mb-3"><ImageTile index={index} file={this.state.selectedFiles[index]} c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} onImageSelect={this.onImageSelect} /></div>
                 })
               }
 
             </div>
           </div>
-          <div className="col-3 right_panel">
+          <div className="col-12 col-md-4 col-lg-4 col-xl-3 right_panel">
             <div className="wrapper">
               <div className="header">
                 <h6 className="font-weight-bold"> photos selected</h6>
@@ -369,7 +369,7 @@ class App extends Component {
               <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedFiles.filter((file, i) => i == this.state.selectedImageIndex)[0].metaData} onInputChange={this.onMetaDataUpdate} />
               <div className="submit_form">
                 <button className="btn btn-second mr-2" onClick={this.onCancel}>Cancel</button>
-                <button className="btn btn-second mr-2" onClick={this.uploadFiles}>Upload</button>
+                <button className="btn btn-primary mr-2" onClick={this.uploadFiles}>Upload</button>
               </div>
             </div>
 
