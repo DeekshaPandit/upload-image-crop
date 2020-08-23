@@ -16,16 +16,13 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
 
     return <div className="scrollable-panel">
         <form noValidate>
-            <div className="effect_wrapper">
-                {index.length > 1 ? <p><i className="fa fa-info-circle"></i>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
-            </div>
-            <div className="form-group">
-                {index.length > 1 ? <p>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
 
+            {index.length > 1 ? <div className="effect_wrapper"> <p><i className="fa fa-info-circle"></i>{`Changes made below will affect ${index.length} selected photos`} </p>   </div> : null}
+
+            <div className="form-group">
                 <label for="exampleFormControlSelect1">Photo Privacy</label>
                 <select name="privacy" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>
                     <option value="public">Public Accessible everywhere, including on Profile</option>
-                    <option value="moderate">Unlisted Accessible everywhere, except on Profile</option>
                     <option value="private">Limited access Only visible to you, unless added to a Gallery</option>
                 </select>
             </div>
@@ -35,7 +32,7 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
             </div>
             <div className="form-group">
                 <label for="exampleFormControlTextarea1">Description</label>
-                <textarea className="form-control" rows="3" name="description" value={metaData.description} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}></textarea>
+                <textarea className="form-control" rows="3" name="description" maxLength="50" value={metaData.description} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}></textarea>
             </div>
 
             <div className="form-group">

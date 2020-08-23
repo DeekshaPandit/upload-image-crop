@@ -227,6 +227,10 @@ overflow-y: auto;
     margin-right: 5px;
   }
 
+  .times-thin {
+    margin-left:4px;
+  }
+
   label{
     font-size: 0.9rem;
   }
@@ -239,5 +243,10 @@ overflow-y: auto;
     border-color: transparent!important;
     box-shadow: none!important;
     border: 1px solid #0069d9!important;
+  }
+
+  .disable-button:{
+    color: #212529;
+    background-color: #212529;
   }
 

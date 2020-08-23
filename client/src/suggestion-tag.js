@@ -28,8 +28,7 @@ function SuggestionTag({ tags, addTag }) {
                         <div className="d-flex flex-wrap">
                             {tags.map((tag, index) => (
                                 <div key={index}>
-
-                                    <button type="button" className="btn btn-outline-primary mr-2 mt-2" >{tag}<i className="fa fa-times times-thin" onClick={event => removeTag(index)}> </i></button>
+                                    <button type="button" className="btn btn-outline-primary mr-2 mt-2" ><i className="fa fa-plus plus-thin"> </i>{tag}<i className="fa fa-times times-thin" onClick={event => removeTag(index)}> </i></button>
                                 </div>
                             ))}
 
