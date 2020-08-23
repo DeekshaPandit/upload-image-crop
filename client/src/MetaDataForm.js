@@ -16,6 +16,9 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
 
     return <div className="scrollable-panel">
         <form noValidate>
+            <div className="effect_wrapper">
+                {index.length > 1 ? <p><i className="fa fa-info-circle"></i>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
+            </div>
             <div className="form-group">
                 {index.length > 1 ? <p>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
 

@@ -148,7 +148,7 @@ export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onRes
             onChange={onCropChange}
           />
         }
-        <p>{file.metaData.title}</p>
+        <p className="mb-1">{file.metaData.title}</p>
         <div className="">
           <i className="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
           {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
