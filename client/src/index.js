@@ -12,8 +12,10 @@ import ConfirmModal from './confirm'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios, { post } from 'axios';
 import { BASEURL, CONFIG } from './constant';
+import Loader from 'react-loader-spinner';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
-const defaultMetaData = { name: "", privacy: "public", title: "", description: "", location: "", breath: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [] }
+const defaultMetaData = { name: "", price: 0.0, privacy: "public", title: "", description: "", location: "", breath: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [] }
 function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   const dragOver = (e) => {
     e.preventDefault();
@@ -107,7 +109,8 @@ class App extends Component {
       },
       showDeleteConfirmationBox: false,
       userSubscription: getUserSubscription(),
-      cancel: false
+      cancel: false,
+      uploading: false
     };
 
     this.onSelectFile = this.onSelectFile.bind(this);
@@ -268,7 +271,7 @@ class App extends Component {
         // get item
         if (this.state.selectedFiles.length + i + 1 <= this.state.userSubscription.maximumPictures) {
           const fileName = files[i].name;
-          const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
+          const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.metaData.name == fileName);
 
           if (duplicateFiles.length > 0) {
             toast.info(`This file has already been uploaded: ${duplicateFiles[0].name}`, {
@@ -329,8 +332,6 @@ class App extends Component {
       selectedFiles[imageIndex].metaData[name] = value;
       if (name === "tags") {
         let tags = [...selectedFiles[imageIndex].metaData[name]]
-        console.log(value);
-
         tags.push(value);
       }
     })
@@ -421,7 +422,12 @@ class App extends Component {
               <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedFiles[0].metaData} onInputChange={this.onMetaDataUpdate} />
               <div className="submit_form">
                 <button className="btn btn-second mr-2" onClick={this.onCancel}>Cancel</button>
-                <button className="btn btn-primary mr-2" onClick={this.uploadFiles}>Upload</button>
+                <button className="btn btn-primary mr-2" onClick={this.uploadFiles}>{this.state.loading ? <Loader
+                  type="Puff"
+                  color="#00BFFF"
+                  height={20}
+                  width={20}
+                  timeout={10000} /> : "Upload"}</button>
               </div>
             </div>
           </div>

@@ -36,6 +36,11 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
             </div>
 
             <div className="form-group">
+                <label for="exampleFormControlInput1">Price</label>
+                <input type="text" name="price" className="form-control" placeholder="Enter Price" onKeyPress={keyPress} value={metaData.price} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+            </div>
+
+            <div className="form-group">
                 <label for="exampleFormControlInput1">Location</label>
                 <input type="text" name="location" className="form-control" placeholder="Enter Location" value={metaData.location} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
             </div>
