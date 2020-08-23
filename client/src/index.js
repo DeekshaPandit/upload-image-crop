@@ -376,7 +376,11 @@ class App extends Component {
     }
 
     console.log("called file upload!");
-    post(url, formData, config)
+    post(url, formData, config).then((data)=> {
+      toast.info("Successfully uploaded", toast.POSITION.TOP_RIGHT)
+    }).catch((err)=> {
+      toast.error("Error while uploading.", toast.POSITION.TOP_RIGHT)
+    })
   }
 
   onImageContainerClick() {
