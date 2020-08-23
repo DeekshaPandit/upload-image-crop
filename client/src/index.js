@@ -403,7 +403,7 @@ class App extends Component {
                 <button className="btn btn-second" onClick={this.onRemoveImages}><i className="fa fa-trash"></i> Remove ({this.state.selectedFiles.length})</button>
               </div>
               <div>
-                <button className="btn btn-second"><i className="fa fa-copy"></i> MultiSelect</button>
+                <button className={this.state.selectedImageIndex.length > 1 ? `btn btn-second` : 'btn disable-button'}><i className="fa fa-copy"></i> MultiSelect</button>
               </div>
             </div>
             <div className="d-flex flex-wrap image-container" onClick={() => { this.onImageContainerClick() }}>
