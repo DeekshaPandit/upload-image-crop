@@ -158,7 +158,7 @@ class App extends Component {
       this.setState({ selectedFiles: [], removeFiles: [], showDeleteConfirmationBox: false, cancel: false })
     }
     else {
-      this.setState({ showDeleteConfirmationBox: false, removeFiles: [], cancel:false });
+      this.setState({ showDeleteConfirmationBox: false, removeFiles: [], cancel: false });
     }
   }
 
@@ -398,19 +398,22 @@ class App extends Component {
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
         <div className="row">
           <div className="col-12 col-md-8 col-lg-8 col-xl-9 upload_bg" onDragOver={this.dragOver} onDragEnter={this.dragEnter} onDragLeave={this.dragLeave} onDrop={this.fileDrop}>
-            <div className="col-12 my-4 d-flex">
-              <div className="add_file text-center mr-2">
-                <span><i className="fa fa-plus"></i> Add</span>
-                <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
+            <div className="col-12 my-4 d-flex justify-content-between">
+              <div className="">
+                <div className="add_file text-center mr-2">
+                  <span><i className="fa fa-plus"></i> Add</span>
+                  <input name="Select File" type="file" accept="image/*" onChange={this.onSelectFiles} multiple />
+                </div>
+                <button className="btn btn-second" onClick={this.onRemoveImages}><i className="fa fa-trash"></i> Remove ({this.state.selectedFiles.length})</button>
               </div>
-              <button className="btn btn-second" onClick={this.onRemoveImages}><i className="fa fa-trash"></i> Remove ({this.state.selectedFiles.length})</button>
-              <button className="btn btn-second"><i className="fa fa-trash"></i> MultiSelect</button>
+              <div>
+                <button className="btn btn-second"><i className="fa fa-copy"></i> MultiSelect</button>
+              </div>
             </div>
-            <div className="col-12 row image-container" onClick={() => { this.onImageContainerClick() }}>
-
+            <div className="d-flex flex-wrap image-container" onClick={() => { this.onImageContainerClick() }}>
               {
                 this.state.selectedFiles.map((item, index) => {
-                  return <div className="col-12 col-md-4 col-lg-4 col-xl-3"><ImageTile index={index} file={this.state.selectedFiles[index]}
+                  return <div className="col-12 col-md-4 col-lg-4 col-xl-3 mb-4"><ImageTile index={index} file={this.state.selectedFiles[index]}
                     c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} onImageSelect={this.onImageSelect} /></div>
                 })
               }
@@ -421,7 +424,7 @@ class App extends Component {
             <div className="wrapper">
               <div className="header">
                 <h6 className="font-weight-bold">{`${this.state.selectedImageIndex.length} photos selected`}</h6>
-               
+
               </div>
               <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedFiles[0].metaData} onInputChange={this.onMetaDataUpdate} />
               <div className="submit_form">

@@ -9,9 +9,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export function MetaDataForm({ index, metaData, onInputChange }) {
     return <div className="scrollable-panel">
         <form noValidate>
+            <div className="effect_wrapper">
+                {index.length > 1 ?<p><i className="fa fa-info-circle"></i>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
+            </div>
             <div className="form-group">
-            {index.length > 1 ? <p>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
-
                 <label for="exampleFormControlSelect1">Photo Privacy</label>
                 <select name="privacy" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>
                     <option value="public">Public Accessible everywhere, including on Profile</option>
