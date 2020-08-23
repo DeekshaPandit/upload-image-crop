@@ -13,7 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios, { post } from 'axios';
 import { BASEURL, CONFIG } from './constant';
 
-const defaultMetaData = { filePath: "", privacy: "public", title: "", description: "", location: "", breath: "", width: "", length: "", category: 1, nsfw: false, watermark: false, tags: [] }
+const defaultMetaData = { name: "", privacy: "public", title: "", description: "", location: "", breath: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [] }
 function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   const dragOver = (e) => {
     e.preventDefault();
@@ -28,7 +28,6 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   }
 
   const fileDrop = (e) => {
-
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files.length <= 5) {
@@ -114,6 +113,9 @@ class App extends Component {
     this.onSelectFile = this.onSelectFile.bind(this);
     this.onSelectFiles = this.onSelectFiles.bind(this);
     this.fileDrop = this.fileDrop.bind(this);
+    this.dragEnter = this.dragEnter.bind(this);
+    this.dragLeave = this.dragLeave.bind(this);
+    this.dragOver = this.dragOver.bind(this);
     this.validateFile = this.validateFile.bind(this);
     this.onRemoveImage = this.onRemoveImage.bind(this);
     this.onRemoveImages = this.onRemoveImages.bind(this);
@@ -158,7 +160,7 @@ class App extends Component {
       this.setState({ selectedFiles: [], removeFiles: [], showDeleteConfirmationBox: false, cancel: false })
     }
     else {
-      this.setState({ showDeleteConfirmationBox: false, removeFiles: [], cancel:false });
+      this.setState({ showDeleteConfirmationBox: false, removeFiles: [], cancel: false });
     }
   }
 
@@ -208,26 +210,27 @@ class App extends Component {
     }
   };
 
-  dragOver(e) {
+  dragOver = (e) => {
     e.preventDefault();
   }
 
-  dragEnter(e) {
+  dragEnter = (e) => {
     e.preventDefault();
   }
 
-  dragLeave(e) {
+  dragLeave = (e) => {
     e.preventDefault();
   }
 
-  fileDrop(e) {
+  fileDrop = (e) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
-    if (files.length) {
-      this.handleFiles(files);
+    if (files.length <= 5) {
+      this.onSelectFiles(e);
     }
-
-    console.log(files);
+    else {
+      this.showMaxLimitMessage();
+    }
   }
 
   handleFiles(files) {
@@ -255,15 +258,16 @@ class App extends Component {
   }
 
   onSelectFiles(e) {
-    if (e.target.files && e.target.files.length > 5) {
+    const files = e.target.files || e.dataTransfer.files;
+    if (files && files.length > 5) {
       this.onShowMaxLimitMessage();
     }
-    else if (e.target.files && e.target.files.length > 0) {
+    else if (files && files.length > 0) {
       this.setState({ selectedImageIndex: [] })
-      for (let i = 0; i < e.target.files.length; i++) {
+      for (let i = 0; i < files.length; i++) {
         // get item
         if (this.state.selectedFiles.length + i + 1 <= this.state.userSubscription.maximumPictures) {
-          const fileName = e.target.files[i].name;
+          const fileName = files[i].name;
           const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.name == fileName);
 
           if (duplicateFiles.length > 0) {
@@ -274,35 +278,23 @@ class App extends Component {
           else {
             const metaData = Object.assign({}, defaultMetaData);
             metaData.title = fileName.substr(0, fileName.lastIndexOf('.'));
-            const file = e.target.files[0];
+            metaData.name = fileName;
+
             const reader = new FileReader();
             reader.addEventListener('load', (e) => {
               this.setState({
-                selectedFiles: [...this.state.selectedFiles, { name: fileName, src: reader.result, originalSrc: reader.result, metaData: metaData, loading: true }]
+                selectedFiles: [...this.state.selectedFiles, { src: reader.result, originalSrc: reader.result, metaData: metaData, loading: true }]
               }, () => {
-                const formData = new FormData();
-                formData.append('file', file);
-                post(`${BASEURL}uploadFile`, formData, CONFIG).then((result) => {
-
-                  // update fileData to the respective file reference.
-                  const selectedIndex = this.state.selectedFiles.findIndex((file, index) => file.name == fileName)
-                  let selectedFiles = [...this.state.selectedFiles]
-                  selectedFiles[selectedIndex].loading = false
-                  selectedFiles[selectedIndex].src = reader.result
-                  selectedFiles[selectedIndex].originalSrc = reader.result
-                  selectedFiles[selectedIndex].metaData.filePath = result.data.filePath
-                  let imageIndexes = [...this.state.selectedImageIndex];
-                  imageIndexes.push(selectedIndex);
-                  this.setState({ selectedFiles: selectedFiles, selectedImageIndex: imageIndexes })
-                }).catch((err) => {
-                  console.log(err);
-                  toast.error("Please select the file again!", {
-                    position: toast.POSITION.TOP_RIGHT
-                  });
-                })
+                // update fileData to the respective file reference.
+                const selectedIndex = this.state.selectedFiles.findIndex((file, index) => file.metaData.name == fileName)
+                let selectedFiles = [...this.state.selectedFiles]
+                selectedFiles[selectedIndex].loading = false
+                let imageIndexes = [...this.state.selectedImageIndex]
+                imageIndexes.push(selectedIndex);
+                this.setState({ selectedFiles: selectedFiles, selectedImageIndex: imageIndexes })
               })
             });
-            reader.readAsDataURL(e.target.files[i]);
+            reader.readAsDataURL(files[i]);
           }
         }
         else {
@@ -370,7 +362,7 @@ class App extends Component {
         u8arr[n] = bstr.charCodeAt(n);
       }
 
-      const f = new File([u8arr], file.name, { type: mime });
+      const f = new File([u8arr], file.metaData.name, { type: mime });
 
       formData.append(`file-${i}`, f);
       formData.append(`metaData-${i}`, JSON.stringify(file.metaData));
@@ -421,7 +413,7 @@ class App extends Component {
             <div className="wrapper">
               <div className="header">
                 <h6 className="font-weight-bold">{`${this.state.selectedImageIndex.length} photos selected`}</h6>
-               
+
               </div>
               <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedFiles[0].metaData} onInputChange={this.onMetaDataUpdate} />
               <div className="submit_form">

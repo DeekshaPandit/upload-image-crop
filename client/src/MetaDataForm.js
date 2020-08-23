@@ -7,10 +7,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export function MetaDataForm({ index, metaData, onInputChange }) {
+    const keyPress = (evt) => {
+        const charCode = (evt.which) ? evt.which : evt.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
     return <div className="scrollable-panel">
         <form noValidate>
             <div className="form-group">
-            {index.length > 1 ? <p>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
+                {index.length > 1 ? <p>{`Changes made below will affect ${index.length} selected photos`} </p> : null}
 
                 <label for="exampleFormControlSelect1">Photo Privacy</label>
                 <select name="privacy" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>
@@ -32,19 +39,19 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                 <label for="exampleFormControlInput1">Location</label>
                 <input type="text" name="location" className="form-control" placeholder="Enter Location" value={metaData.location} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
             </div>
-            
-                <div className="form-group">
-                    <label for="exampleFormControlInput1">Breath</label>
-                    <input type="text" name="breath" className="form-control" placeholder="Enter Breath" value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
-                </div>
-                <div className="form-group">
-                    <label for="exampleFormControlInput1">Length</label>
-                    <input type="text" name="length" className="form-control" placeholder="Enter Length" value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
-                </div>
-                <div className="form-group">
-                    <label for="exampleFormControlInput1">Width</label>
-                    <input type="text" name="width" className="form-control" placeholder="Enter Width" value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
-                </div>
+
+            <div className="form-group">
+                <label for="exampleFormControlInput1">Breath</label>
+                <input type="text" name="breath" className="form-control" placeholder="Enter Breath" onKeyPress={keyPress} value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+            </div>
+            <div className="form-group">
+                <label for="exampleFormControlInput1">Length</label>
+                <input type="text" name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+            </div>
+            <div className="form-group">
+                <label for="exampleFormControlInput1">Width</label>
+                <input type="text" name="width" className="form-control" placeholder="Enter Width" onKeyPress={keyPress} value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+            </div>
             <div className="form-group">
                 <label for="exampleFormControlSelect1">Category</label>
                 <select name="category" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>

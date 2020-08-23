@@ -2,14 +2,12 @@ const express = require("express");
 const multer = require('multer');
 const { Client } = require('pg');
 const path = require('path')
-const fs = require("fs");
-const { parse } = require('./multipart-parse')
-var connectionString = "postgres://postgres:admin@localhost:5432/PaintingCompetition";
+const connectionString = "postgres://postgres:admin@localhost:5432/PaintingCompetition";
 const client = new Client({
     connectionString: connectionString
 });
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './images')
     },
@@ -18,12 +16,9 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({ storage: storage }).any()
-
+const upload = multer({ storage: storage }).any()
 client.connect();
-
 const app = express();
-const bodyparser = require("body-parser");
 
 const port = process.env.PORT || 4200;
 app.use(express.urlencoded());
@@ -38,23 +33,8 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.post('/uploadFile', async (req, res, next) => {
-    // upload(req, res, function (err) {
-         
-    //     if (err instanceof multer.MulterError) {
-    //         console.error(err)
-    //         return res.status(500).json(err)
-    //     } else if (err) {
-    //         console.error(err)
-    //         return res.status(500).json(err)
-    //     }
-      return res.status(200).send({filePath: `rge`})
-    // })
-});
-
 app.post('/uploadFiles', async (req, res, next) => {
     upload(req, res, function (err) {
-        
         if (err instanceof multer.MulterError) {
             console.error(err)
             return res.status(500).json(err)
@@ -63,13 +43,31 @@ app.post('/uploadFiles', async (req, res, next) => {
             return res.status(500).json(err)
         }
 
-        Object.keys(req.body).forEach((key,i)=> {
-            
+        let fileMetaDatas = [];
+        Object.keys(req.body).forEach((key, i) => {
+            const metaData = { ...JSON.parse(req.body[key]) };
+            const filePath = req.files.filter((file) => metaData.name == file.originalname)[0].path
+            metaData.filePath = filePath;
+            fileMetaDatas.push(metaData);
         })
-        console.log(req.body)
-});
-});
 
+        const valueArray = fileMetaDatas.map((m) => {
+            return `('${m.title}', '${m.filePath}', '${m.description}', ${m.category}, ${m.length}, ${m.breath},${m.width})`
+        });
+
+        const queryValue = valueArray.join(',');
+        const query = `INSERT INTO ecanvas_image_info(image_title, image_path,image_desc, image_category, image_size_length, image_size_breadth, image_size_width) VALUES ${queryValue}`;
+
+        client.query(query, (err, data) => {
+            if (err) {
+                console.log(err)
+                return res.status(500);
+            }
+
+            return res.status(200).json({ status: "Success" });
+        })
+    });
+});
 
 app.listen(port, () => {
     console.log(`running at port ${port}`);
