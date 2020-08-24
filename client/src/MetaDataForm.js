@@ -32,12 +32,12 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
             </div>
             <div className="form-group">
                 <label for="exampleFormControlTextarea1">Description</label>
-                <textarea className="form-control" rows="3" name="description" maxLength="50" value={metaData.description} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}></textarea>
+                <textarea className="form-control" rows="3" placeholder="Describe in 50 characters" name="description" maxLength="50" value={metaData.description} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}></textarea>
             </div>
 
             <div className="form-group">
                 <label for="exampleFormControlInput1">Price</label>
-                <input type="text" name="price" className="form-control" placeholder="Enter Price" onKeyPress={keyPress} value={metaData.price} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                <input type="number" disabled={index.length > 1} step="0.01" min="0" name="price" className="form-control" placeholder="Enter Price" onKeyPress={keyPress} value={metaData.price} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
             </div>
 
             <div className="form-group">
@@ -47,15 +47,15 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
 
             <div className="form-group">
                 <label for="exampleFormControlInput1">Breath</label>
-                <input type="text" name="breath" className="form-control" placeholder="Enter Breath" onKeyPress={keyPress} value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                <input type="text" disabled={index.length > 1} name="breath" className="form-control" placeholder="Enter Breath" onKeyPress={keyPress} value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
             </div>
             <div className="form-group">
                 <label for="exampleFormControlInput1">Length</label>
-                <input type="text" name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                <input type="text" disabled={index.length > 1} name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
             </div>
             <div className="form-group">
                 <label for="exampleFormControlInput1">Width</label>
-                <input type="text" name="width" className="form-control" placeholder="Enter Width" onKeyPress={keyPress} value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                <input type="text" disabled={index.length > 1} name="width" className="form-control" placeholder="Enter Width" onKeyPress={keyPress} value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
             </div>
             <div className="form-group">
                 <label for="exampleFormControlSelect1">Category</label>
@@ -79,7 +79,7 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                 <div className="custom-control custom-checkbox">
                     <input type="checkbox" className="custom-control-input" id="customCheck2" name="watermark" checked={metaData.watermark} onChange={(e) => { onInputChange(index, e.target.name, e.target.checked) }}></input>
                     <label className="custom-control-label" for="customCheck2">Add watermark</label>
-                    <p>Add a 500px watermark to my photo when displayed..</p>
+                    <p>Add watermark to my photo when displayed..</p>
                 </div>
             </div>
             <SuggestionTag tags={metaData.tags} addTag={(value) => { onInputChange(index, "tags", value) }} />

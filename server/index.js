@@ -3,9 +3,13 @@ const multer = require('multer');
 const { Client } = require('pg');
 const path = require('path')
 const connectionString = "postgres://postgres:admin@localhost:5432/PaintingCompetition";
+
 const client = new Client({
     connectionString: connectionString
 });
+
+client.connect();
+const app = express();
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -17,8 +21,6 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage: storage }).any()
-client.connect();
-const app = express();
 
 const port = process.env.PORT || 4200;
 app.use(express.urlencoded());
@@ -52,11 +54,11 @@ app.post('/uploadFiles', async (req, res, next) => {
         })
 
         const valueArray = fileMetaDatas.map((m) => {
-            return `('${m.title}', '${m.filePath}', '${m.description}', ${m.category}, ${m.length}, ${m.breath},${m.width})`
+            return `('${m.title}', '${m.filePath}', '${m.description}', ${m.category}, ${m.price}, ${m.length}, ${m.breath},${m.width})`
         });
 
         const queryValue = valueArray.join(',');
-        const query = `INSERT INTO ecanvas_image_info(image_title, image_path,image_desc, image_category, image_size_length, image_size_breadth, image_size_width) VALUES ${queryValue}`;
+        const query = `INSERT INTO ecanvas_image_info(image_title, image_path,image_desc, image_category, image_price, image_size_length, image_size_breadth, image_size_width) VALUES ${queryValue}`;
 
         client.query(query, (err, data) => {
             if (err) {

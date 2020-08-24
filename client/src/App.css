@@ -245,8 +245,11 @@ overflow-y: auto;
     border: 1px solid #0069d9!important;
   }
 
-  .disable-button:{
+  .disable-button{
     color: #212529;
     background-color: #212529;
   }
 
+  .upload_button {
+    min-width: 40px;
+  }

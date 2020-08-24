@@ -15,7 +15,7 @@ import { BASEURL, CONFIG } from './constant';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
-const defaultMetaData = { name: "", price: 0.0, privacy: "public", title: "", description: "", location: "", breath: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [] }
+const defaultMetaData = { name: "", price: 0.00, privacy: "public", title: "", description: "", location: "", breath: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [] }
 function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   const dragOver = (e) => {
     e.preventDefault();
@@ -77,21 +77,6 @@ function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
           <h6 className="">Max. photo dimensions are 200MP/megapixels</h6>
         </div>
       </div>
-      {/* <div className="file-display-container">
-        {
-          selectedFiles.map((data, i) =>
-            <div className="file-status-bar" key={i}>
-              <div>
-                <div className="file-type-logo"></div>
-                <div className="file-type">{fileType(data.name)}</div>
-                <span className={`file-name ${data.invalid ? 'file-error' : ''}`}>{data.name}</span>
-              </div>
-              <div className="file-remove">X</div>
-            </div>
-          )
-        }
-      </div> */}
-
     </div>);
 }
 
@@ -148,7 +133,6 @@ class App extends Component {
   }
 
   onRemoveImages() {
-    console.log("has called remove Images");
     if (this.state.selectedFiles.length > 0) {
       this.setState({ showDeleteConfirmationBox: true })
     }
@@ -195,7 +179,6 @@ class App extends Component {
 
   onSelectFile(e) {
     if (e.target.files && e.target.files.length > 0) {
-      console.log(e.target.files);
       const files = [];
       this.setState({ selectedFilesLength: e.target.files.length })
 
@@ -240,7 +223,6 @@ class App extends Component {
     for (let i = 0; i < files.length; i++) {
       if (this.validateFile(files[i])) {
         // add to an array so we can display the name of file
-        console.log("got valid file")
       } else {
         // add a new property called invalid
         files[i]['invalid'] = true;
@@ -256,7 +238,6 @@ class App extends Component {
 
         reader.readAsDataURL(files[i]);
       }
-
     }
   }
 
@@ -274,7 +255,7 @@ class App extends Component {
           const duplicateFiles = this.state.selectedFiles.filter((file, index) => file.metaData.name == fileName);
 
           if (duplicateFiles.length > 0) {
-            toast.info(`This file has already been uploaded: ${duplicateFiles[0].name}`, {
+            toast.info(`This file has already been uploaded: ${fileName}`, {
               position: toast.POSITION.TOP_RIGHT
             });
           }
@@ -315,14 +296,16 @@ class App extends Component {
     return true;
   }
 
-  onImageSelect(index) {
-    console.log("selected index:", index);
-    let selectedImages = [...this.state.selectedImageIndex];
-    if (!this.state.selectedImageIndex.includes(index)) {
-      selectedImages.push(index)
+  onImageSelect(index, shiftKey) {
+    if (!this.state.selectedImageIndex.includes(index) && shiftKey) {
+      this.setState({ selectedImageIndex: [...this.state.selectedImageIndex, index] })
     }
-
-    this.setState({ selectedImageIndex: selectedImages })
+    else  if (!this.state.selectedImageIndex.includes(index) && !shiftKey) {
+      this.setState({ selectedImageIndex: [index] })
+    }
+    else {
+      this.setState({ selectedImageIndex: [0] })
+    }
   }
 
   onMetaDataUpdate(index, name, value) {
@@ -348,10 +331,6 @@ class App extends Component {
     const formData = new FormData();
     for (var i = 0; i < this.state.selectedFiles.length; i++) {
       let file = this.state.selectedFiles[i];
-      const postFile = {
-        source: file.src,
-        metaData: file.metaData
-      }
 
       var arr = file.src.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
@@ -375,16 +354,23 @@ class App extends Component {
       }
     }
 
-    console.log("called file upload!");
-    post(url, formData, config).then((data)=> {
-      toast.info("Successfully uploaded", toast.POSITION.TOP_RIGHT)
-    }).catch((err)=> {
-      toast.error("Error while uploading.", toast.POSITION.TOP_RIGHT)
-    })
+    this.setState({ loading: true })
+    setTimeout(() => {
+      post(url, formData, config).then((data) => {
+        this.setState({ loading: false })
+        toast.info("Successfully uploaded", toast.POSITION.TOP_RIGHT)
+      }).catch((err) => {
+        this.setState({ loading: false })
+        toast.error("Error while uploading.", toast.POSITION.TOP_RIGHT)
+      })
+    }, 3000
+    )
   }
 
-  onImageContainerClick() {
-    this.setState({ selectedImageIndex: [0] });
+  onImageContainerClick(e) {
+    if (e.currentTarget) {
+      this.setState({ selectedImageIndex: [0] });
+    }
   }
 
   render() {
@@ -407,7 +393,7 @@ class App extends Component {
                 <button className={this.state.selectedImageIndex.length > 1 ? `btn btn-second` : 'btn disable-button'}><i className="fa fa-copy"></i> MultiSelect</button>
               </div>
             </div>
-            <div className="d-flex flex-wrap image-container" onClick={() => { this.onImageContainerClick() }}>
+            <div className="d-flex flex-wrap image-container" onClick={(e) => { this.onImageContainerClick(e) }}>
               {
                 this.state.selectedFiles.map((item, index) => {
                   return <div className="col-12 col-md-4 col-lg-4 col-xl-3 mb-4"><ImageTile index={index} file={this.state.selectedFiles[index]}
@@ -423,15 +409,16 @@ class App extends Component {
                 <h6 className="font-weight-bold">{`${this.state.selectedImageIndex.length} photos selected`}</h6>
 
               </div>
-              <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedFiles[0].metaData} onInputChange={this.onMetaDataUpdate} />
+              <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedImageIndex.length > 0 ? this.state.selectedFiles[this.state.selectedImageIndex[0]].metaData : this.state.selectedFiles[0].metaData} onInputChange={this.onMetaDataUpdate} />
               <div className="submit_form">
                 <button className="btn btn-second mr-2" onClick={this.onCancel}>Cancel</button>
-                <button className="btn btn-primary mr-2" onClick={this.uploadFiles}>{this.state.loading ? <Loader
+                <button className="btn btn-primary upload_button mr-2" onClick={this.uploadFiles}>{this.state.loading ?
+                <> <Loader
                   type="Puff"
                   color="#00BFFF"
                   height={20}
                   width={20}
-                  timeout={10000} /> : "Upload"}</button>
+                  timeout={10000} /> <p>Uploading...</p></>: "Upload"}</button>
               </div>
             </div>
           </div>

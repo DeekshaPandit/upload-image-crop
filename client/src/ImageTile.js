@@ -123,9 +123,9 @@ export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onRes
   }
 
   const onSelectImage = (e) => {
-    e.persist();
+    e.stopPropagation();
     console.log(e);
-    onImageSelect(index);
+    onImageSelect(index, e.shiftKey);
   }
 
   return (<div onClick={onSelectImage}>
