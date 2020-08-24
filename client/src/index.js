@@ -355,16 +355,14 @@ class App extends Component {
     }
 
     this.setState({ loading: true })
-    setTimeout(() => {
-      post(url, formData, config).then((data) => {
-        this.setState({ loading: false })
-        toast.info("Successfully uploaded", toast.POSITION.TOP_RIGHT)
-      }).catch((err) => {
-        this.setState({ loading: false })
-        toast.error("Error while uploading.", toast.POSITION.TOP_RIGHT)
-      })
-    }, 3000
-    )
+
+    post(url, formData, config).then((data) => {
+      this.setState({ loading: false })
+      toast.info("Successfully uploaded", toast.POSITION.TOP_RIGHT)
+    }).catch((err) => {
+      this.setState({ loading: false })
+      toast.error("Error while uploading.", toast.POSITION.TOP_RIGHT)
+    })
   }
 
   onImageContainerClick(e) {
@@ -412,13 +410,13 @@ class App extends Component {
               <MetaDataForm index={this.state.selectedImageIndex} metaData={this.state.selectedImageIndex.length > 0 ? this.state.selectedFiles[this.state.selectedImageIndex[0]].metaData : this.state.selectedFiles[0].metaData} onInputChange={this.onMetaDataUpdate} />
               <div className="submit_form">
                 <button className="btn btn-second mr-2" onClick={this.onCancel}>Cancel</button>
-                <button className="btn btn-primary upload_button mr-2" onClick={this.uploadFiles}>{this.state.loading ?
-                <> <Loader
+                <button className="btn d-flex btn-primary mr-2" onClick={this.uploadFiles}>{this.state.loading ? <> <Loader
                   type="Puff"
-                  color="#00BFFF"
-                  height={20}
-                  width={20}
-                  timeout={10000} /> <p>Uploading...</p></>: "Upload"}</button>
+                  color="#FFFF"
+                  height={18}
+                  width={18}
+                  line-height={0}
+                  timeout={10000} /><span className="ml-2">Uploading</span></> : "Upload"}</button>
               </div>
             </div>
           </div>
