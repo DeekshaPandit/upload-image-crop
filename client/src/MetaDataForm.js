@@ -49,9 +49,18 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                 <label for="exampleFormControlInput1">Breath</label>
                 <input type="text" name="breath" className="form-control" placeholder="Enter Breath" onKeyPress={keyPress} value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
             </div>
-            <div className="form-group">
-                <label for="exampleFormControlInput1">Length</label>
-                <input type="text" name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+            <div className="d-flex flex-wrap align-items-center">
+                <div className="col-8 pl-0 pr-3 form-group">
+                    <label for="exampleFormControlInput1">Length</label>
+                    <input type="text" name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                </div>
+                <div className="col-4 p-0 form-group">
+                    <label for="">Photo Privacy</label>
+                    <select name="" className="form-control">
+                        <option value="public">inch</option>
+                        <option value="private">mm</option>
+                    </select>
+                </div>
             </div>
             <div className="form-group">
                 <label for="exampleFormControlInput1">Width</label>
