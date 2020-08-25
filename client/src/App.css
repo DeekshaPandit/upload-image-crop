@@ -189,6 +189,7 @@ overflow-y: auto;
     padding: 10px 10px;
     border-left: 4px solid #2986f7;
     margin-top: 15px;
+    margin-bottom: 15px;
   }
 
   .scrollable-panel .effect_wrapper p{
@@ -245,8 +246,11 @@ overflow-y: auto;
     border: 1px solid #0069d9!important;
   }
 
-  .disable-button:{
+  .disable-button{
     color: #212529;
     background-color: #212529;
   }
 
+  .upload_button {
+    min-width: 40px;
+  }
