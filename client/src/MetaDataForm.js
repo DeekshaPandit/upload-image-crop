@@ -45,30 +45,51 @@ export function MetaDataForm({ index, metaData, onInputChange }) {
                 <input type="text" name="location" className="form-control" placeholder="Enter Location" value={metaData.location} onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }} />
             </div>
 
-            <div className="form-group">
-                <label for="exampleFormControlInput1">Breath</label>
-                <input type="text" disabled={index.length > 1} name="breath" className="form-control" placeholder="Enter Breath" onKeyPress={keyPress} value={metaData.breath} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
-            </div>
-            
-                <div className="col-12  p-0 form-group">
-                    <label for="exampleFormControlInput1">Length</label>
-                    <div className="flex-wrap align-items-center d-flex">
-                        <div className="col-8 pr-3 pl-0">
-                            <input type="text" disabled={index.length > 1} name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
-                        </div>
-                        <div className="col-4 p-0">
-                            <select name="" className="form-control">
-                                <option value="public">inch</option>
-                                <option value="private">mm</option>
-                            </select>
-                        </div>
-                        </div>
+            <div className="col-12  p-0 form-group">
+                <label for="exampleFormControlInput1">Breadth</label>
+                <div className="flex-wrap align-items-center d-flex">
+                    <div className="col-8 pr-3 pl-0">
+                        <input type="text" disabled={index.length > 1} name="breadth" className="form-control" placeholder="Enter Breadth" onKeyPress={keyPress} value={metaData.breadth} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                    </div>
+                    <div className="col-4 p-0">
+                        <select disabled={true} name="" className="form-control">
+                            <option value="inch">inch</option>
+                            <option value="cm">cm</option>
+                        </select>
+                    </div>
                 </div>
-            
-            <div className="form-group">
-                <label for="exampleFormControlInput1">Width</label>
-                <input type="text" disabled={index.length > 1} name="width" className="form-control" placeholder="Enter Width" onKeyPress={keyPress} value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
             </div>
+
+            <div className="col-12  p-0 form-group">
+                <label for="exampleFormControlInput1">Length</label>
+                <div className="flex-wrap align-items-center d-flex">
+                    <div className="col-8 pr-3 pl-0">
+                        <input type="text" disabled={index.length > 1} name="length" className="form-control" placeholder="Enter Length" onKeyPress={keyPress} value={metaData.length} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                    </div>
+                    <div className="col-4 p-0">
+                        <select disabled={true} name="" className="form-control">
+                            <option value="inch">inch</option>
+                            <option value="cm">cm</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div className="col-12  p-0 form-group">
+                <label for="exampleFormControlInput1">Width</label>
+                <div className="flex-wrap align-items-center d-flex">
+                    <div className="col-8 pr-3 pl-0">
+                        <input type="text" disabled={index.length > 1} name="width" className="form-control" placeholder="Enter Width" onKeyPress={keyPress} value={metaData.width} onChange={(e) => { onInputChange(index, e.target.name, parseInt(e.target.value ? e.target.value : 0)) }} />
+                    </div>
+                    <div className="col-4 p-0">
+                        <select disabled={true} name="" className="form-control">
+                            <option value="inch">inch</option>
+                            <option value="cm">cm</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
             <div className="form-group">
                 <label for="exampleFormControlSelect1">Category</label>
                 <select name="category" className="form-control" onChange={(e) => { onInputChange(index, e.target.name, e.target.value) }}>

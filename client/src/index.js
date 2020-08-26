@@ -15,7 +15,7 @@ import { BASEURL, CONFIG } from './constant';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
-const defaultMetaData = { name: "", price: 0.00, privacy: "public", title: "", description: "", location: "", breath: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [] }
+const defaultMetaData = { name: "", price: 0.00, privacy: "public", title: "", description: "", location: "", breadth: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [], unit:"inch" }
 function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   const dragOver = (e) => {
     e.preventDefault();

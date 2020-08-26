@@ -49,12 +49,17 @@ app.post('/uploadFiles', async (req, res, next) => {
         Object.keys(req.body).forEach((key, i) => {
             const metaData = { ...JSON.parse(req.body[key]) };
             const filePath = req.files.filter((file) => metaData.name == file.originalname)[0].path
-            metaData.filePath = filePath;
+            // LINE 2: ('laptop', 'images\1598414573864-Image2.jpg', 'This is lapto...
+            //     ^
+            // DETAIL: Array value must start with "{" or dimension information.
+            // Adding a hack to pertain value of filePath
+            metaData.filePath = `{${filePath}}`;
             fileMetaDatas.push(metaData);
         })
 
+        console.log(fileMetaDatas);
         const valueArray = fileMetaDatas.map((m) => {
-            return `('${m.title}', '${m.filePath}', '${m.description}', ${m.category}, ${m.price}, ${m.length}, ${m.breath},${m.width})`
+            return `('${m.title}', '${m.filePath}', '${m.description}', ${m.category}, ${m.price}, ${m.length}, ${m.breadth},${m.width})`
         });
 
         const queryValue = valueArray.join(',');
