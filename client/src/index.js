@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import React, { Component, useState } from 'react';
-
+import watermark from 'watermarkjs'
 import { ImageTile } from './ImageTile';
 import { MetaDataForm } from './MetaDataForm';
-import { getUserSubscription, getCategories } from './user';
+import { getUserSubscription, getCategories, WatermarkText} from './user';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadIcon from "./assets/images/icon_upload.svg";
@@ -15,7 +15,7 @@ import { BASEURL, CONFIG } from './constant';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
-const defaultMetaData = { name: "", price: 0.00, privacy: "public", title: "", description: "", location: "", breadth: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [], unit:"inch" }
+const defaultMetaData = { name: "", price: 0.00, privacy: "public", title: "", description: "", location: "", breadth: 0, width: 0, length: 0, category: 1, nsfw: false, watermark: false, tags: [], unit: "inch" }
 function ShowUploadUI({ showMaxLimitMessage, onSelectFiles }) {
   const dragOver = (e) => {
     e.preventDefault();
@@ -300,7 +300,7 @@ class App extends Component {
     if (!this.state.selectedImageIndex.includes(index) && shiftKey) {
       this.setState({ selectedImageIndex: [...this.state.selectedImageIndex, index] })
     }
-    else  if (!this.state.selectedImageIndex.includes(index) && !shiftKey) {
+    else if (!this.state.selectedImageIndex.includes(index) && !shiftKey) {
       this.setState({ selectedImageIndex: [index] })
     }
     else {
@@ -316,6 +316,18 @@ class App extends Component {
       if (name === "tags") {
         let tags = [...selectedFiles[imageIndex].metaData[name]]
         tags.push(value);
+      }
+
+      if (name === "watermark") {
+        const text= watermark.text
+        watermark([selectedFiles[imageIndex].src])
+        .image(text.lowerRight(WatermarkText, '48px Josefin Slab', '#fff', 0.5))
+          .then(img => {
+            let selectedFiles = [...this.state.selectedFiles]
+            selectedFiles[index].src = img.src
+            this.setState({ selectedFiles: selectedFiles })
+          });
+
       }
     })
 

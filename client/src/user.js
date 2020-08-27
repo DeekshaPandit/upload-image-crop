@@ -11,3 +11,5 @@ export function getCategories() {
     { id: 6, name: 'Pencil' }
     ]
 }
+
+export const WatermarkText = 'Suhas'

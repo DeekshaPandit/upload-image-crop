@@ -13,7 +13,8 @@
     "react-image-crop": "8.6.4",
     "react-loader-spinner": "3.1.14",
     "react-scripts": "3.4.1",
-    "react-toastify": "5.5.0"
+    "react-toastify": "5.5.0",
+    "watermarkjs": "2.1.1"
   },
   "devDependencies": {},
   "scripts": {
