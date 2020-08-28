@@ -89,8 +89,8 @@ class App extends Component {
       selectedImageIndex: [0],
       crop: {
         unit: '%',
-        width: 30,
-        aspect: 16 / 9,
+        width: 100,
+        height: 100,
       },
       showDeleteConfirmationBox: false,
       userSubscription: getUserSubscription(),
