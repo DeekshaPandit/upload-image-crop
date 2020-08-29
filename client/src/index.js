@@ -3,7 +3,7 @@ import React, { Component, useState } from 'react';
 import watermark from 'watermarkjs'
 import { ImageTile } from './ImageTile';
 import { MetaDataForm } from './MetaDataForm';
-import { getUserSubscription, getCategories, WatermarkText} from './user';
+import { getUserSubscription, getCategories, WatermarkText } from './user';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadIcon from "./assets/images/icon_upload.svg";
@@ -319,16 +319,24 @@ class App extends Component {
       }
 
       if (name === "watermark") {
-        const text= watermark.text
-        watermark([selectedFiles[imageIndex].src])
-        .image(text.lowerRight(WatermarkText, '48px Josefin Slab', '#fff', 0.5))
-          .then(img => {
-            let selectedFiles = [...this.state.selectedFiles]
-            selectedFiles[index].src = img.src
-            this.setState({ selectedFiles: selectedFiles })
-          });
-
+        if (value) {
+          const text = watermark.text
+          watermark([selectedFiles[imageIndex].src])
+            .image(text.center(WatermarkText, '48px Josefin Slab', '#fff', 0.5))
+            .then(img => {
+              selectedFiles[imageIndex].withOutWaterMark = selectedFiles[imageIndex].src
+              selectedFiles[imageIndex].src = img.src
+              
+              this.setState({ selectedFiles: selectedFiles })
+            });
+        }
+        else 
+        {
+          selectedFiles[imageIndex].src = selectedFiles[imageIndex].withOutWaterMark
+        }
       }
+      
+
     })
 
     this.setState({ selectedFiles: selectedFiles })
