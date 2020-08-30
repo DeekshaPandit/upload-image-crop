@@ -6,7 +6,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c, onImageSelect }) {
 
-  const ImageStyle = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", height: "200px", objectFit: "contain", width: "100%" }
+  const ImageStyle = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", objectFit: "contain" }
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
   const [dirty, setDirty] = useState(false);
@@ -142,7 +142,6 @@ export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onRes
             src={file.src}
             imageStyle={ImageStyle} /* write here*/
             crop={crop}
-            ruleOfThirds
             onImageLoaded={onImageLoaded}
             onComplete={onCropComplete}
             onChange={onCropChange}
