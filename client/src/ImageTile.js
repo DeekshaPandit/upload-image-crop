@@ -4,9 +4,10 @@ import 'react-image-crop/dist/ReactCrop.css';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
-export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c, onImageSelect }) {
+export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c, onImageSelect }) {
 
-  const ImageStyle = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", objectFit: "contain" }
+  const ImageStyle = { padding: "2px", backgroundColor: "#fff", objectFit: "contain", width: '100%', height: '100%' }
+  const ImageStyleWithBorder = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", objectFit: "contain", width: '100%', height: '100%' }
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState(c);
   const [dirty, setDirty] = useState(false);
@@ -124,7 +125,6 @@ export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onRes
 
   const onSelectImage = (e) => {
     e.stopPropagation();
-    console.log(e);
     onImageSelect(index, e.shiftKey);
   }
 
@@ -137,10 +137,10 @@ export function ImageTile({ file, onRemoveImage, onPreview, onRotateImage, onRes
       timeout={10000} /> :
       <>
         {preview ?
-          <img style={ImageStyle} src={file.src} /> :
+          <img style={selectedImageIndexes.includes(index) ? ImageStyleWithBorder : ImageStyle} src={file.src} /> :
           <ReactCrop
             src={file.src}
-            imageStyle={ImageStyle} /* write here*/
+            imageStyle={selectedImageIndexes.includes(index) ? ImageStyleWithBorder : ImageStyle} /* write here*/
             crop={crop}
             onImageLoaded={onImageLoaded}
             onComplete={onCropComplete}

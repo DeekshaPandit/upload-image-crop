@@ -414,7 +414,7 @@ class App extends Component {
             <div className="d-flex flex-wrap image-container" onClick={(e) => { this.onImageContainerClick(e) }}>
               {
                 this.state.selectedFiles.map((item, index) => {
-                  return <div className="col-12 col-md-4 col-lg-4 col-xl-3 mb-4"><ImageTile index={index} file={this.state.selectedFiles[index]}
+                  return <div className="col-12 col-md-4 col-lg-4 col-xl-3 mb-4"><ImageTile selectedImageIndexes={this.state.selectedImageIndex} index={index} file={this.state.selectedFiles[index]}
                     c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} onImageSelect={this.onImageSelect} /></div>
                 })
               }
