@@ -24,8 +24,15 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
     // since the context is rotated, the image will be rotated also
     const img = new Image();
     img.src = file.src;
-    canvas.width = img.width;
-    canvas.height = img.height;
+
+    if (degree == 90 || degree == 270) {
+      canvas.width = img.height;
+      canvas.height = img.width;
+    }
+    else {
+      canvas.width = img.width;
+      canvas.height = img.height;
+    }
 
     // move to the center of the canvas
     ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -81,7 +88,7 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
         // window.URL.revokeObjectURL(fileUrl);
         // fileUrl = window.URL.createObjectURL(blob);
         resolve(blob);
-      }, file.type);
+      }, file.type, 1);
     });
   }
 

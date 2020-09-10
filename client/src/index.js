@@ -152,13 +152,15 @@ class App extends Component {
   }
 
   onPreview(index, croppedImageUrl) {
-    const reader = new FileReader();
-    reader.readAsDataURL(croppedImageUrl);
-    reader.addEventListener('load', () => {
-      let selectedFiles = [...this.state.selectedFiles];
-      selectedFiles[index].src = reader.result;
-      this.setState({ selectedFiles: selectedFiles })
-    });
+    if (croppedImageUrl) {
+      const reader = new FileReader();
+      reader.readAsDataURL(croppedImageUrl);
+      reader.addEventListener('load', () => {
+        let selectedFiles = [...this.state.selectedFiles];
+        selectedFiles[index].src = reader.result;
+        this.setState({ selectedFiles: selectedFiles })
+      });
+    }
   }
 
   onRotateImage(index, rotatedImageUrl) {
@@ -326,16 +328,15 @@ class App extends Component {
             .then(img => {
               selectedFiles[imageIndex].withOutWaterMark = selectedFiles[imageIndex].src
               selectedFiles[imageIndex].src = img.src
-              
+
               this.setState({ selectedFiles: selectedFiles })
             });
         }
-        else 
-        {
+        else {
           selectedFiles[imageIndex].src = selectedFiles[imageIndex].withOutWaterMark
         }
       }
-      
+
 
     })
 
