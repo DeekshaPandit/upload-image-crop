@@ -87,11 +87,6 @@ class App extends Component {
       selectedFiles: [],
       removeFiles: [],
       selectedImageIndex: [0],
-      crop: {
-        unit: '%',
-        width: 100,
-        height: 100,
-      },
       showDeleteConfirmationBox: false,
       userSubscription: getUserSubscription(),
       cancel: false,
@@ -416,7 +411,7 @@ class App extends Component {
               {
                 this.state.selectedFiles.map((item, index) => {
                   return <div className="col-12 col-md-4 col-lg-4 col-xl-3 mb-4"><ImageTile selectedImageIndexes={this.state.selectedImageIndex} index={index} file={this.state.selectedFiles[index]}
-                    c={this.state.crop} onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} onImageSelect={this.onImageSelect} /></div>
+                    onRemoveImage={this.onRemoveImage} onPreview={this.onPreview} onRotateImage={this.onRotateImage} onResetImage={this.onResetImage} onImageSelect={this.onImageSelect} /></div>
                 })
               }
 

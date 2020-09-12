@@ -4,12 +4,12 @@ import 'react-image-crop/dist/ReactCrop.css';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
-export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, c, onImageSelect }) {
+export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview, onRotateImage, onResetImage, index, onImageSelect }) {
 
   const ImageStyle = { padding: "2px", backgroundColor: "#fff", objectFit: "contain", width: '100%', height: '100%' }
   const ImageStyleWithBorder = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", objectFit: "contain", width: '100%', height: '100%' }
   const [imageRef, setImageRef] = useState('')
-  const [crop, setCropState] = useState(c);
+  const [crop, setCropState] = useState({});
   const [dirty, setDirty] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [rotation, setRotation] = useState(0);
@@ -96,7 +96,7 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
     setImageRef(image)
   };
 
-  const onCropComplete = crop => {
+  const onCropComplete = c => {
     makeClientCrop(crop);
   };
 
@@ -112,19 +112,24 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
       );
 
       setDirty(true);
+      console.log("setCroppedimageURl is called!");
       setCroppedImageUrl(croppedImageUrl);
     }
   }
 
-  const previewImage = () => {
+  const previewImage = (e) => {
+    e.stopPropagation()
     setPreview(true);
     onPreview(index, croppedImageUrl)
+    setCroppedImageUrl('')
   }
 
   const onRotateRight = async () => {
     setImageRef('');
     //setRotation(newRotation);
     setDirty(true);
+    setRotation(90)
+    
     const rotatedImageUrl = await getRotatedImg(90);
     onRotateImage(index, rotatedImageUrl)
   }
@@ -157,10 +162,10 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
         <div className="">
           <i className="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
           {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
-          <i className="fa fa-eye mr-3" title="preview" onClick={() => { if (dirty) { previewImage(); } }}></i>
+          <i className="fa fa-eye mr-3" title="preview" onClick={(e) => { if (dirty) { previewImage(e); } }}></i>
           {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
           <i className="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
-          <i className="fa fa-undo mr-3" title="reset" onClick={() => { if (dirty) { setPreview(false); setCropState(c); setRotation(0); onResetImage(index) } }}></i>
+          <i className="fa fa-undo mr-3" title="reset" onClick={() => { if (dirty) { setPreview(false); setRotation(0); onResetImage(index) } }}></i>
         </div>
       </>
     }
