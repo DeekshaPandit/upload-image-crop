@@ -136,13 +136,13 @@ class App extends Component {
   onConfirm(value) {
     if (value && this.state.removeFiles.length > 0) {
       const selectedFiles = this.state.selectedFiles.filter((file, i) => !this.state.removeFiles.includes(i))
-      this.setState({ selectedFiles: selectedFiles, removeFiles: [], showDeleteConfirmationBox: false, cancel: false })
+      this.setState({ selectedFiles: selectedFiles, selectedImageIndex: [0], removeFiles: [], showDeleteConfirmationBox: false, cancel: false })
     }
     else if (value) {
-      this.setState({ selectedFiles: [], removeFiles: [], showDeleteConfirmationBox: false, cancel: false })
+      this.setState({ selectedFiles: [], removeFiles: [], selectedImageIndex:[0], showDeleteConfirmationBox: false, cancel: false })
     }
     else {
-      this.setState({ showDeleteConfirmationBox: false, removeFiles: [], cancel: false });
+      this.setState({ showDeleteConfirmationBox: false, selectedImageIndex:[0], removeFiles: [], cancel: false });
     }
   }
 
