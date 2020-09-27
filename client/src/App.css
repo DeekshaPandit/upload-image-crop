@@ -254,3 +254,17 @@ overflow-y: auto;
   .upload_button {
     min-width: 40px;
   }
+
+  .image_tile {
+    padding: "2px";
+    background-color: "#fff";
+    object-fit: "contain" 
+  }
+
+  .image_tile .border {
+    border: "2px solid #0870d1";
+  }
+
+  .lightbox_background{
+    background-color: #fcfdfe;
+ }

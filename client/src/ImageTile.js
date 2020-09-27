@@ -10,7 +10,6 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
   const ImageStyleWithBorder = { border: "2px solid #0870d1", padding: "2px", backgroundColor: "#fff", objectFit: "contain", width: '100%', height: '100%' }
   const [imageRef, setImageRef] = useState('')
   const [crop, setCropState] = useState({});
-  const [dirty, setDirty] = useState(false);
   const [croppedImageUrl, setCroppedImageUrl] = useState('');
   const [rotation, setRotation] = useState(0);
   const [preview, setPreview] = useState(false);
@@ -109,9 +108,7 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
       const croppedImageUrl = await getCroppedImg(
         imageRef,
         crop
-      );
-
-      setDirty(true);
+      ); 
       console.log("setCroppedimageURl is called!");
       setCroppedImageUrl(croppedImageUrl);
     }
@@ -127,7 +124,7 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
   const onRotateRight = async () => {
     setImageRef('');
     //setRotation(newRotation);
-    setDirty(true);
+   
     setRotation(90)
     
     const rotatedImageUrl = await getRotatedImg(90);
@@ -162,10 +159,10 @@ export function ImageTile({ selectedImageIndexes, file, onRemoveImage, onPreview
         <div className="">
           <i className="fa fa-trash mr-3" title="delete" onClick={() => { onRemoveImage(index) }}></i>
           {/* <button onClick={() => { onRemoveImage(index) }}> delete</button> */}
-          <i className="fa fa-eye mr-3" title="preview" onClick={(e) => { if (dirty) { previewImage(e); } }}></i>
+          <i className="fa fa-eye mr-3" title="preview" onClick={(e) => { previewImage(e);  }}></i>
           {/* <button onClick={() => { setPreview(true); onPreview(index, croppedImageUrl) }}> preview</button> */}
           <i className="fa fa-shield fa-rotate-90 mr-3" title="rotate" onClick={() => { onRotateRight() }}></i>
-          <i className="fa fa-undo mr-3" title="reset" onClick={() => { if (dirty) { setPreview(false); setRotation(0); onResetImage(index) } }}></i>
+          <i className="fa fa-undo mr-3" title="reset" onClick={() => { setPreview(false); setRotation(0); onResetImage(index) }}></i>
         </div>
       </>
     }

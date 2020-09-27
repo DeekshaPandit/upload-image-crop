@@ -12,6 +12,8 @@ import ConfirmModal from './confirm'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios, { post } from 'axios';
 import { BASEURL, CONFIG } from './constant';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 import Loader from 'react-loader-spinner';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
@@ -87,10 +89,13 @@ class App extends Component {
       selectedFiles: [],
       removeFiles: [],
       selectedImageIndex: [0],
+      selectedPreviewImage: null,
       showDeleteConfirmationBox: false,
       userSubscription: getUserSubscription(),
       cancel: false,
-      uploading: false
+      uploading: false,
+      openLightBox: false,
+      allImagesSelected: false
     };
 
     this.onSelectFile = this.onSelectFile.bind(this);
@@ -108,6 +113,7 @@ class App extends Component {
     this.onConfirm = this.onConfirm.bind(this);
     this.onMetaDataUpdate = this.onMetaDataUpdate.bind(this);
     this.onImageSelect = this.onImageSelect.bind(this);
+    this.onSelectAll = this.onSelectAll.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
     this.onImageContainerClick = this.onImageContainerClick.bind(this);
@@ -139,10 +145,21 @@ class App extends Component {
       this.setState({ selectedFiles: selectedFiles, selectedImageIndex: [0], removeFiles: [], showDeleteConfirmationBox: false, cancel: false })
     }
     else if (value) {
-      this.setState({ selectedFiles: [], removeFiles: [], selectedImageIndex:[0], showDeleteConfirmationBox: false, cancel: false })
+      this.setState({ selectedFiles: [], removeFiles: [], selectedImageIndex: [0], showDeleteConfirmationBox: false, cancel: false })
     }
     else {
-      this.setState({ showDeleteConfirmationBox: false, selectedImageIndex:[0], removeFiles: [], cancel: false });
+      this.setState({ showDeleteConfirmationBox: false, selectedImageIndex: [0], removeFiles: [], cancel: false });
+    }
+  }
+
+  onSelectAll() {
+    if(this.state.allImagesSelected) {
+      this.setState({allImagesSelected: false, selectedImageIndex: [0]})
+    }
+    else 
+    {
+      const imageIndexes = Array(this.state.selectedFiles.length).fill().map((x,i)=>i)
+      this.setState({allImagesSelected: true, selectedImageIndex: imageIndexes});
     }
   }
 
@@ -153,8 +170,11 @@ class App extends Component {
       reader.addEventListener('load', () => {
         let selectedFiles = [...this.state.selectedFiles];
         selectedFiles[index].src = reader.result;
-        this.setState({ selectedFiles: selectedFiles })
+        this.setState({ selectedFiles: selectedFiles, openLightBox: true, selectedPreviewImage: index })
       });
+    }
+    else {
+      this.setState({ openLightBox: true, selectedPreviewImage: index })
     }
   }
 
@@ -390,6 +410,30 @@ class App extends Component {
   render() {
     return (<div className="container-fluid App">
       <ToastContainer />
+
+      {this.state.openLightBox && (
+        <Lightbox className="lightbox_background"
+          mainSrc={this.state.selectedFiles[this.state.selectedPreviewImage].src}
+          mainSrcThumbnail={this.state.selectedFiles[this.state.selectedPreviewImage].src}
+          prevSrcThumbnail={this.state.selectedFiles[(this.state.selectedPreviewImage + this.state.selectedFiles.length - 1) % this.state.selectedFiles.length]}
+          nextSrcThumbnail={this.state.selectedFiles[(this.state.selectedPreviewImage + 1) % this.state.selectedFiles.length]}
+          nextSrc={this.state.selectedFiles[(this.state.selectedPreviewImage + 1) % this.state.selectedFiles.length]}
+          prevSrc={this.state.selectedFiles[(this.state.selectedPreviewImage + this.state.selectedFiles.length - 1) % this.state.selectedFiles.length]}
+          onCloseRequest={() => { this.setState({ openLightBox: false }) }}
+          clickOutsideToClose={true}
+          imageTitle={this.state.selectedFiles[this.state.selectedPreviewImage].metaData.name}
+          clickOutsideToClose={true}
+          onMovePrevRequest={() => {
+            let index = (this.state.selectedPreviewImage + this.state.selectedFiles.length - 1) % this.state.selectedFiles.length;
+            this.setState({ selectedPreviewImage: index })
+          }}
+          onMoveNextRequest={() => {
+            let index = (this.state.selectedPreviewImage + 1) % this.state.selectedFiles.length;
+            this.setState({ selectedPreviewImage: index })
+          }
+          }
+        />
+      )}
       <ConfirmModal showBox={this.state.showDeleteConfirmationBox} cancel={this.state.cancel} onConfirm={this.onConfirm} photosLength={this.state.removeFiles.length > 0 ? this.state.removeFiles.length : this.state.selectedFiles.length} />
 
       {this.state.selectedFiles.length == 0 ? <ShowUploadUI onSelectFiles={this.onSelectFiles} showMaxLimitMessage={this.onShowMaxLimitMessage} /> :
@@ -404,7 +448,7 @@ class App extends Component {
                 <button className="btn btn-second" onClick={this.onRemoveImages}><i className="fa fa-trash"></i> Remove ({this.state.selectedFiles.length})</button>
               </div>
               <div>
-                <button className={this.state.selectedImageIndex.length > 1 ? `btn btn-second` : 'btn disable-button'}><i className="fa fa-copy"></i> MultiSelect</button>
+                <button className={this.state.selectedImageIndex.length > 1 ? `btn btn-second` : 'btn disable-button'} onClick={()=>{this.onSelectAll();}}><i className="fa fa-copy"></i> Select All</button>
               </div>
             </div>
             <div className="d-flex flex-wrap image-container" onClick={(e) => { this.onImageContainerClick(e) }}>
